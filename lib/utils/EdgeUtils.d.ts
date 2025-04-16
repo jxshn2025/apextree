@@ -1,2 +1,3 @@
-import { Node, TreeNode } from '../models/Graph';
-export declare const getEdge: (node: TreeNode<Node>, nodeWidth: number, nodeHeight: number, graphDirection: string) => string | null;
+import { Node } from '../models';
+
+export declare const getEdge: (node: Node, newParent: Node, nodeWidth: number, nodeHeight: number, graphDirection: string) => null | string;

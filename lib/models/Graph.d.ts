@@ -1,35 +1,21 @@
-import { G, Path } from '@svgdotjs/svg.js';
-import { FlextreeNode } from 'd3-flextree';
+import { Node, TreeNode } from './TreeNode';
 import { Paper } from './Paper';
-import { FontOptions, NodeOptions, TooltipOptions, TreeDirection, TreeOptions } from '../settings/Options';
-export interface GraphPoint {
-    readonly x: number;
-    readonly y: number;
-}
-export interface Node {
-    readonly id: string;
-    readonly name: string;
-    readonly children: Array<Node>;
-    readonly expanded: boolean;
-    readonly options?: NodeOptions & TooltipOptions & FontOptions;
-}
-export interface TreeNode<N> extends FlextreeNode<N> {
-    hiddenChildren: Array<TreeNode<N>> | undefined;
-    edge?: Path;
-}
+import { TreeDirection, TreeOptions } from '../settings/Options';
+import { G } from '@svgdotjs/svg.js';
+
 export declare class Graph extends Paper {
+    element: HTMLElement;
     options: TreeOptions;
     rootNode: TreeNode<Node> | undefined;
-    element: HTMLElement;
     constructor(element: HTMLElement, options: TreeOptions);
-    construct(data: Node): void;
-    renderNode(node: TreeNode<Node>, mainGroup: G): void;
-    renderEdge(node: TreeNode<Node>, group: G): void;
-    collapse(nodeId: string): void;
-    expand(nodeId: string): void;
     changeLayout(direction?: TreeDirection): void;
+    collapse(nodeId: string): void;
+    construct(data: Node): void;
+    expand(nodeId: string): void;
     fitScreen(): void;
     render({ keepOldPosition }?: {
-        keepOldPosition?: boolean | undefined;
+        keepOldPosition?: boolean;
     }): void;
+    renderEdge(node: TreeNode<Node>, group: G): void;
+    renderNode(node: TreeNode<Node>, mainGroup: G): void;
 }

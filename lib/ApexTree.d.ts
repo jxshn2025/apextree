@@ -1,9 +1,10 @@
-import { Node, Graph } from './models';
 import { TreeOptions } from './settings/Options';
+import { Graph, NestedNode } from './models';
+
 export declare class ApexTree {
     element: HTMLElement;
-    options: TreeOptions;
     graph: Graph;
+    options: TreeOptions;
     constructor(element: HTMLElement, options: TreeOptions);
-    render(data: Node): Graph;
+    render(data: NestedNode): Graph;
 }

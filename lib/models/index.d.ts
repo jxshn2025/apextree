@@ -1,2 +1,3 @@
-export { Graph, GraphPoint, Node, TreeNode } from './Graph';
-export { Toolbar } from './Toolbar';
+export { Graph } from './DagreGraph';
+export { NestedNode, Node } from './GraphNode';
+export { GraphPoint } from './GraphPoint';

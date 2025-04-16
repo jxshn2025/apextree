@@ -73,6 +73,8 @@ edgeWidth | `1`                    | The width for the edges
 edgeColor | `#BCBCBC`                    | The color for the edges
 edgeColorHover | `#BCBCBC`                    | The color for the edges when highlighted
 enableTooltip | false                        | Enable tooltip on hover of nodes
+groupLeafNodes | false                        | For stacking leaf nodes
+groupLeafNodesSpacing | 10                        | Spacing between stacked leaf nodes
 tooltipId | `apextree-tooltip-container` | The tooltip HTML element id
 tooltipTemplate | defaultNodeTemplate          | The HTML template for tooltip
 tooltipMaxWidth | 100                          | The max width of the tooltip

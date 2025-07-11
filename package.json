@@ -10,6 +10,7 @@
   "types": "./index.d.ts",
   "main": "./apextree.min.js",
   "module": "./apextree.es.min.js",
+  "license": "See LICENSE in LICENSE",
   "exports": {
     ".": {
       "import": {

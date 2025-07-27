@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/apexcharts/apextree/compare/v1.4.1...v1.4.2) (2025-07-27)
+
+
+### Bug Fixes
+
+* add npm install in workflow ([ba334a9](https://github.com/apexcharts/apextree/commit/ba334a9be71901e317187c60d23d4a1029f7db54))
+
 ### 1.4.1 (2025-07-27)
 
 

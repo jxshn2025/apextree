@@ -2,9 +2,9 @@
   "name": "apextree",
   "version": "1.4.2",
   "dependencies": {
-    "@dagrejs/dagre": "^1.1.4",
     "@svgdotjs/svg.js": "^3.2.0",
-    "@svgdotjs/svg.panzoom.js": "^2.1.2"
+    "@svgdotjs/svg.panzoom.js": "^2.1.2",
+    "@dagrejs/dagre": "^1.1.4"
   },
   "type": "module",
   "types": "./index.d.ts",

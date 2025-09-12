@@ -1,1 +1,4 @@
-export { ApexTree as default } from './lib/ApexTree';
+import { ApexTree } from './lib/ApexTree';
+
+export { ApexTree as default };
+export { ApexTree };

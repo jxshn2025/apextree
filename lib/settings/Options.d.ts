@@ -12,6 +12,8 @@ export interface NodeOptions {
     readonly borderStyle: string;
     readonly borderWidth: number;
     readonly enableExpandCollapse: boolean;
+    readonly expandCollapseButtonBGColor: string;
+    readonly expandCollapseButtonBorderColor: string;
     readonly groupLeafNodesSpacing: number;
     readonly nodeBGColor: string;
     readonly nodeBGColorHover: string;
@@ -20,6 +22,7 @@ export interface NodeOptions {
     readonly nodeStyle: string;
     readonly nodeTemplate: (content: string) => string;
     readonly nodeWidth: number;
+    readonly onNodeClick?: (node: any) => void;
 }
 export interface TooltipOptions {
     readonly enableTooltip: boolean;

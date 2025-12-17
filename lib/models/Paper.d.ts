@@ -1,11 +1,13 @@
 import { NodeOptions } from '../settings/Options';
 import { Circle, CircleAttr, Element, ForeignObject, G, Path, Rect, Svg, Text, TextAttr } from '@svgdotjs/svg.js';
+import { ChartContext } from '../../../../graph-utils/src/index.ts';
 
 export declare class Paper {
+    protected chartContext: ChartContext;
     private readonly height;
     private readonly width;
     canvas: Svg;
-    constructor(element: HTMLElement, width: number, height: number, canvasStyle: string);
+    constructor(element: HTMLElement, width: number, height: number, canvasStyle: string, chartContext: ChartContext);
     static drawCircle(attributes?: CircleAttr): Circle;
     static drawGroup(x?: number, y?: number, id?: string, parent?: string): G;
     static drawPath(pathString: string, { borderColor, id }?: {

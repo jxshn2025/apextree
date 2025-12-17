@@ -3,14 +3,15 @@ import { NestedNode } from './GraphNode';
 import { TreeDirection, TreeOptions } from '../settings/Options';
 import { G } from '@svgdotjs/svg.js';
 import { Edge } from '@dagrejs/dagre';
+import { ChartContext } from '../../../../graph-utils/src/index.ts';
 
 export declare class Graph extends Paper {
+    options: TreeOptions;
     private data;
     private graph;
     private nodeMap;
-    element: HTMLElement;
-    options: TreeOptions;
-    constructor(element: HTMLElement, options: TreeOptions);
+    private preservedPositions;
+    constructor(element: HTMLElement, options: TreeOptions, chartContext: ChartContext);
     private calculateLayout;
     private resetGraph;
     private setGraphNodesAndEdges;

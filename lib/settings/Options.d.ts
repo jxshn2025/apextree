@@ -28,9 +28,14 @@ export interface TooltipOptions {
     readonly enableTooltip: boolean;
     readonly tooltipBGColor: string;
     readonly tooltipBorderColor: string;
+    readonly tooltipFontColor: string;
+    readonly tooltipFontSize: string;
     readonly tooltipId: string;
     readonly tooltipMaxWidth: number;
+    readonly tooltipMinWidth: number;
+    readonly tooltipPadding: number;
     readonly tooltipTemplate?: (content: string) => string;
+    readonly tooltipOffset: number;
 }
 export interface FontOptions {
     readonly fontColor: string;

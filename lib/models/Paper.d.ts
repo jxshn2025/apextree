@@ -6,6 +6,7 @@ export declare class Paper {
     protected chartContext: ChartContext;
     private readonly height;
     private readonly width;
+    private readonly containerElement;
     canvas: Svg;
     constructor(element: HTMLElement, width: number, height: number, canvasStyle: string, chartContext: ChartContext);
     static drawCircle(attributes?: CircleAttr): Circle;
@@ -31,4 +32,5 @@ export declare class Paper {
     resetViewBox(): void;
     updateViewBox(x: number, y: number, width: number, height: number): void;
     zoom(zoomFactor: number): void;
+    getContainerElement(): HTMLElement;
 }

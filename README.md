@@ -76,7 +76,7 @@ The layout can be configured by either setting the properties in the table below
 | groupLeafNodesSpacing | 10 | Spacing between stacked leaf nodes |
 | tooltipId | `apextree-tooltip-container` | The tooltip HTML element id |
 | tooltipTemplate | defaultNodeTemplate | The HTML template for tooltip |
-| tooltipMaxWidth | 300 | The max width of the tooltip in pixels |
+| tooltipMaxWidth | undefined | The max width of the tooltip in pixels |
 | tooltipMinWidth | 100 | The min width of the tooltip in pixels |
 | tooltipBorderColor | `#BCBCBC` | The border color of tooltip |
 | tooltipBGColor | `#FFFFFF` | The background color of tooltip |

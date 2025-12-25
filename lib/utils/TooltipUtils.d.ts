@@ -19,7 +19,6 @@ export interface TooltipPosition {
 }
 /**
  * calculate optimal tooltip position avoiding viewport edges
- * note: mouseX and mouseY should be pageX and pageY (already include scroll)
  */
 export declare function calculateTooltipPosition(mouseX: number, mouseY: number, tooltipWidth: number, tooltipHeight: number, offset: number): TooltipPosition;
 /**

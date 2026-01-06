@@ -42,6 +42,20 @@ To create a basic tree with minimal configuration, write as follows:
  const graph = tree.render(data);
 ```
 
+## Setting the License
+
+To use ApexTree with a commercial license, set your license key before creating any chart instances:
+
+```js
+import ApexTree from 'apextree';
+
+// set license key before creating any charts
+ApexTree.setLicense('your-license-key');
+
+const tree = new ApexTree(document.getElementById('svg-tree'), options);
+const graph = tree.render(data);
+```
+
 ## Tree Options
 
 The layout can be configured by either setting the properties in the table below by passing a second arg to Apextree with these properties set. The latter takes precedence.

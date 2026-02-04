@@ -6,6 +6,10 @@
     "@svgdotjs/svg.panzoom.js": "^2.1.2",
     "@dagrejs/dagre": "^1.1.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apexcharts/apextree"
+  },
   "type": "module",
   "types": "./index.d.ts",
   "main": "./apextree.min.js",

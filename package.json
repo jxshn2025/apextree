@@ -1,6 +1,6 @@
 {
   "name": "apextree",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
     "@svgdotjs/svg.panzoom.js": "^2.1.2",
@@ -11,10 +11,6 @@
   "main": "./apextree.min.js",
   "module": "./apextree.es.min.js",
   "license": "See LICENSE in LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/apexcharts/apextree"
-  },
   "exports": {
     ".": {
       "import": {

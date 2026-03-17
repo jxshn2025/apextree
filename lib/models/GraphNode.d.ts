@@ -1,5 +1,4 @@
 import { FontOptions, NodeOptions, TooltipOptions } from '../settings/Options';
-import { Node as DagreNode } from '@dagrejs/dagre';
 
 export interface NestedNode<T = undefined> {
     readonly children: Array<NestedNode<T>>;
@@ -8,7 +7,11 @@ export interface NestedNode<T = undefined> {
     readonly name: string;
     readonly options?: FontOptions & NodeOptions & TooltipOptions;
 }
-export interface Node<T = undefined> extends DagreNode {
+export interface Node<T = undefined> {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
     readonly children: Array<string>;
     readonly data: T;
     readonly hiddenChildren: Array<string> | undefined;

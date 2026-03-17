@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree — Collapse Badges Demo</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 4px;
+      }
+      p.desc {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+      }
+      .demo-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+      }
+      .demo-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        flex: 1 1 360px;
+      }
+      .demo-card h2 {
+        font-size: 1rem;
+        color: #444;
+        margin: 0 0 4px;
+      }
+      .demo-card .hint {
+        font-size: 0.78rem;
+        color: #888;
+        margin: 0 0 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ApexTree — Collapse Badges</h1>
+    <p class="desc">
+      When a node is collapsed the expand/collapse button shows a <strong>+N</strong> badge indicating the total
+      number of hidden descendants. The badge disappears when the node is expanded again.
+    </p>
+
+    <div class="demo-row">
+      <!-- Main showcase: pre-collapsed, badge visible on load -->
+      <div class="demo-card">
+        <h2>Default badge (top direction)</h2>
+        <p class="hint">Bob and Jane are pre-collapsed — click their buttons to toggle.</p>
+        <div id="tree-top"></div>
+      </div>
+
+      <!-- Left direction: pre-collapsed -->
+      <div class="demo-card">
+        <h2>Left direction + custom badge colors</h2>
+        <p class="hint">Custom green badge. Click to expand/collapse.</p>
+        <div id="tree-left"></div>
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <!-- Threshold demo: pre-collapsed but badge only for ≥ 3 -->
+      <div class="demo-card">
+        <h2>collapseBadgeThreshold: 3</h2>
+        <p class="hint">Badge only shown when ≥ 3 nodes hidden. Bob (+5) shows; Jane (+2) does not.</p>
+        <div id="tree-threshold"></div>
+      </div>
+
+      <!-- Badge disabled -->
+      <div class="demo-card">
+        <h2>collapseBadgeEnabled: false</h2>
+        <p class="hint">No badge rendered even when collapsed.</p>
+        <div id="tree-disabled"></div>
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <!-- CSS var theming -->
+      <div class="demo-card">
+        <h2>CSS custom property theming</h2>
+        <p class="hint">
+          Red badge via <code>--apex-tree-badge-bg</code> and <code>--apex-tree-badge-color</code>.
+        </p>
+        <div
+          id="tree-css"
+          style="--apex-tree-badge-bg: #e53935; --apex-tree-badge-color: #fff; --apex-tree-badge-font-size: 11px"
+        ></div>
+      </div>
+
+      <!-- Right direction -->
+      <div class="demo-card">
+        <h2>Right direction</h2>
+        <p class="hint">Badge appears to the left of the collapse button.</p>
+        <div id="tree-right"></div>
+      </div>
+    </div>
+
+    <script>
+      // ── shared data ────────────────────────────────────────────────────────
+      const data = {
+        id: 'alice',
+        name: 'Alice (CEO)',
+        options: {nodeBGColor: '#cdb4db', nodeBGColorHover: '#cdb4db'},
+        children: [
+          {
+            id: 'bob',
+            name: 'Bob (VP Eng)',
+            options: {nodeBGColor: '#a8dadc', nodeBGColorHover: '#a8dadc'},
+            children: [
+              {id: 'c1', name: 'Charlie', options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'}},
+              {
+                id: 'c2',
+                name: 'Diana',
+                options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+                children: [
+                  {id: 'c2a', name: 'Eve', options: {nodeBGColor: '#f4a261', nodeBGColorHover: '#f4a261'}},
+                  {id: 'c2b', name: 'Frank', options: {nodeBGColor: '#f4a261', nodeBGColorHover: '#f4a261'}},
+                ],
+              },
+              {id: 'c3', name: 'Grace', options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'}},
+            ],
+          },
+          {
+            id: 'jane',
+            name: 'Jane (VP Mktg)',
+            options: {nodeBGColor: '#a8dadc', nodeBGColorHover: '#a8dadc'},
+            children: [
+              {id: 'm1', name: 'Karl', options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'}},
+              {id: 'm2', name: 'Lena', options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'}},
+            ],
+          },
+        ],
+      };
+
+      const sharedOpts = {
+        nodeWidth: 130,
+        nodeHeight: 44,
+        childrenSpacing: 60,
+        siblingSpacing: 24,
+        enableExpandCollapse: true,
+        canvasStyle: 'border: 1px solid #ddd; border-radius: 4px;',
+        fontColor: '#333',
+        borderColor: '#bbb',
+        width: 540,
+        height: 340,
+      };
+
+      // ── 1. Top direction — pre-collapse both VP nodes ──────────────────────
+      {
+        const g = new ApexTree(document.getElementById('tree-top'), {
+          ...sharedOpts,
+          direction: 'top',
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+
+      // ── 2. Left direction — custom green badge, pre-collapsed ──────────────
+      {
+        const g = new ApexTree(document.getElementById('tree-left'), {
+          ...sharedOpts,
+          direction: 'left',
+          collapseBadgeBGColor: '#2e7d32',
+          collapseBadgeFontColor: '#fff',
+          collapseBadgeFontSize: '11px',
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+
+      // ── 3. Threshold = 3: Bob (+5) shows badge, Jane (+2) does not ─────────
+      {
+        const g = new ApexTree(document.getElementById('tree-threshold'), {
+          ...sharedOpts,
+          direction: 'top',
+          collapseBadgeThreshold: 3,
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+
+      // ── 4. Badge disabled ──────────────────────────────────────────────────
+      {
+        const g = new ApexTree(document.getElementById('tree-disabled'), {
+          ...sharedOpts,
+          direction: 'top',
+          collapseBadgeEnabled: false,
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+
+      // ── 5. CSS custom property theming ─────────────────────────────────────
+      {
+        const g = new ApexTree(document.getElementById('tree-css'), {
+          ...sharedOpts,
+          direction: 'top',
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+
+      // ── 6. Right direction ─────────────────────────────────────────────────
+      {
+        const g = new ApexTree(document.getElementById('tree-right'), {
+          ...sharedOpts,
+          direction: 'right',
+        }).render(data);
+        g.collapse('bob');
+        g.collapse('jane');
+      }
+    </script>
+  </body>
+</html>

@@ -1,6 +1,5 @@
 import { NodeOptions } from '../settings/Options';
-import { Circle, CircleAttr, Element, ForeignObject, G, Path, Rect, Svg, Text, TextAttr } from '@svgdotjs/svg.js';
-import { ChartContext } from '../../../../graph-utils/src/index.ts';
+import { ChartContext, Circle, CircleAttr, ForeignObject, G, Path, Rect, SvgCanvas as Svg, Text, TextAttr, WrappedEl } from '../../../../graph-utils/src/index.ts';
 
 export declare class Paper {
     protected chartContext: ChartContext;
@@ -12,8 +11,8 @@ export declare class Paper {
     static drawCircle(attributes?: CircleAttr): Circle;
     static drawGroup(x?: number, y?: number, id?: string, parent?: string): G;
     static drawPath(pathString: string, { borderColor, id }?: {
-        borderColor?: string;
-        id?: string;
+        borderColor?: string | undefined;
+        id?: string | undefined;
     }): Path;
     static drawRect({ color, height, opacity, radius, width, x1, y1, }?: {
         color?: string;
@@ -21,16 +20,22 @@ export declare class Paper {
         opacity?: number;
         radius?: number;
         width?: number;
-        x1?: any;
-        y1?: any;
+        x1?: number;
+        y1?: number;
     }): Rect;
+    static drawSvgIcon(svgMarkup: string): WrappedEl;
     static drawTemplate(template: string, { nodeHeight, nodeWidth }?: Partial<NodeOptions>): ForeignObject;
-    static drawText(text: string, { dx, dy, x, y }: Partial<TextAttr>): Text;
-    add(element: Element): void;
+    static drawText(text: string | undefined, { dx, dy, x, y }: Partial<TextAttr>): Text;
+    add(element: WrappedEl): void;
     clear(): void;
     exportToSvg(): void;
     resetViewBox(): void;
     updateViewBox(x: number, y: number, width: number, height: number): void;
     zoom(zoomFactor: number): void;
     getContainerElement(): HTMLElement;
+    /**
+     * Apply WAI-ARIA tree semantics to the root SVG canvas element.
+     * Sets role="tree", aria-label, and aria-multiselectable.
+     */
+    setTreeA11yAttributes(label: string): void;
 }

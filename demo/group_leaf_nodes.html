@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,101 +7,199 @@
     <script src="../apextree.min.js"></script>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <div id="svg-tree" style="margin: 0 auto"></div>
     <script>
       const data = {
-        id: 'ms',
-        data: {
-          imageURL: 'https://i.pravatar.cc/300?img=68',
-          name: 'Margret Swanson',
-        },
-        options: {
-          nodeBGColor: '#cdb4db',
-          nodeBGColorHover: '#cdb4db',
-        },
+        id: 'root',
+        data: {imageURL: 'https://i.pravatar.cc/300?img=1', name: 'Diana Prince'},
+        options: {nodeBGColor: '#7b5ea7', nodeBGColorHover: '#7b5ea7'},
         children: [
+          // ── Child 1: 3 leaf children ────────────────────────────────────────
           {
-            id: 'mh',
-            data: {
-              imageURL: 'https://i.pravatar.cc/300?img=69',
-              name: 'Mark Hudson',
-            },
-            options: {
-              nodeBGColor: '#ffafcc',
-              nodeBGColorHover: '#ffafcc',
-            },
+            id: 'c1',
+            data: {imageURL: 'https://i.pravatar.cc/300?img=11', name: 'Mark Hudson'},
+            options: {nodeBGColor: '#e07a5f', nodeBGColorHover: '#e07a5f'},
             children: [
               {
-                id: 'kb',
-                data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=65',
-                  name: 'Karyn Borbas',
-                },
-                options: {
-                  nodeBGColor: '#f8ad9d',
-                  nodeBGColorHover: '#f8ad9d',
-                },
+                id: 'c1_1',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=21', name: 'Karyn Borbas'},
+                options: {nodeBGColor: '#e07a5f', nodeBGColorHover: '#e07a5f'},
               },
               {
-                id: 'cr',
-                data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=60',
-                  name: 'Chris Rup',
-                },
-                options: {
-                  nodeBGColor: '#c9cba3',
-                  nodeBGColorHover: '#c9cba3',
-                },
+                id: 'c1_2',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=22', name: 'Chris Rup'},
+                options: {nodeBGColor: '#e07a5f', nodeBGColorHover: '#e07a5f'},
+              },
+              {
+                id: 'c1_3',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=23', name: 'Lena Marsh'},
+                options: {nodeBGColor: '#e07a5f', nodeBGColorHover: '#e07a5f'},
               },
             ],
           },
+          // ── Child 2: 2 leaf children ────────────────────────────────────────
           {
-            id: 'cs',
-            data: {
-              imageURL: 'https://i.pravatar.cc/300?img=59',
-              name: 'Chris Lysek',
-            },
-            options: {
-              nodeBGColor: '#00afb9',
-              nodeBGColorHover: '#00afb9',
-            },
+            id: 'c2',
+            data: {imageURL: 'https://i.pravatar.cc/300?img=12', name: 'Chris Lysek'},
+            options: {nodeBGColor: '#00afb9', nodeBGColorHover: '#00afb9'},
             children: [
               {
-                id: 'Noah_Chandler',
-                data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=57',
-                  name: 'Noah Chandler',
-                },
-                options: {
-                  nodeBGColor: '#84a59d',
-                  nodeBGColorHover: '#84a59d',
-                },
+                id: 'c2_1',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=24', name: 'Noah Chandler'},
+                options: {nodeBGColor: '#00afb9', nodeBGColorHover: '#00afb9'},
               },
               {
-                id: 'Felix_Wagner',
-                data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=52',
-                  name: 'Felix Wagner',
-                },
-                options: {
-                  nodeBGColor: '#0081a7',
-                  nodeBGColorHover: '#0081a7',
-                },
+                id: 'c2_2',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=25', name: 'Felix Wagner'},
+                options: {nodeBGColor: '#00afb9', nodeBGColorHover: '#00afb9'},
+              },
+            ],
+          },
+          // ── Child 3: 4 children — 2 leaf, 2 with further children (level 3) ─
+          {
+            id: 'c3',
+            data: {imageURL: 'https://i.pravatar.cc/300?img=13', name: 'Sofia Reyes'},
+            options: {nodeBGColor: '#3d405b', nodeBGColorHover: '#3d405b'},
+            children: [
+              // leaf
+              {
+                id: 'c3_1',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=26', name: 'Tom Ellery'},
+                options: {nodeBGColor: '#81b29a', nodeBGColorHover: '#81b29a'},
+              },
+              // leaf
+              {
+                id: 'c3_2',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=27', name: 'Priya Nair'},
+                options: {nodeBGColor: '#f4a261', nodeBGColorHover: '#f4a261'},
+              },
+              // has children → level 3
+              {
+                id: 'c3_3',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=28', name: 'James Okafor'},
+                options: {nodeBGColor: '#264653', nodeBGColorHover: '#264653'},
+                children: [
+                  {
+                    id: 'c3_3_1',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=41', name: 'Aisha Kone'},
+                    options: {nodeBGColor: '#264653', nodeBGColorHover: '#264653'},
+                  },
+                  {
+                    id: 'c3_3_2',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=42', name: 'Luis Vega'},
+                    options: {nodeBGColor: '#264653', nodeBGColorHover: '#264653'},
+                  },
+                  {
+                    id: 'c3_3_3',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=43', name: 'Sara Kim'},
+                    options: {nodeBGColor: '#264653', nodeBGColorHover: '#264653'},
+                  },
+                ],
+              },
+              // has children → level 3
+              {
+                id: 'c3_4',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=29', name: 'Mei Lin'},
+                options: {nodeBGColor: '#457b9d', nodeBGColorHover: '#457b9d'},
+                children: [
+                  {
+                    id: 'c3_4_1',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=44', name: 'Dan Frost'},
+                    options: {nodeBGColor: '#457b9d', nodeBGColorHover: '#457b9d'},
+                  },
+                  {
+                    id: 'c3_4_2',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=45', name: 'Nia Banks'},
+                    options: {nodeBGColor: '#457b9d', nodeBGColorHover: '#457b9d'},
+                  },
+                ],
+              },
+            ],
+          },
+          // ── Child 4: 4 leaf children ────────────────────────────────────────
+          {
+            id: 'c4',
+            data: {imageURL: 'https://i.pravatar.cc/300?img=14', name: 'Raj Patel'},
+            options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+            children: [
+              {
+                id: 'c4_1',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=31', name: 'Olivia Stone'},
+                options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+              },
+              {
+                id: 'c4_2',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=32', name: 'Sam Torres'},
+                options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+              },
+              {
+                id: 'c4_3',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=33', name: 'Ivan Petrov'},
+                options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+              },
+              {
+                id: 'c4_4',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=34', name: 'Grace Yuen'},
+                options: {nodeBGColor: '#e9c46a', nodeBGColorHover: '#e9c46a'},
+              },
+            ],
+          },
+          // ── Child 5: 3 children — 1 with further children, 2 leaf ───────────
+          {
+            id: 'c5',
+            data: {imageURL: 'https://i.pravatar.cc/300?img=15', name: 'Amara Diallo'},
+            options: {nodeBGColor: '#2d6a4f', nodeBGColorHover: '#2d6a4f'},
+            children: [
+              // has children → level 3
+              {
+                id: 'c5_1',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=35', name: 'Ben Carter'},
+                options: {nodeBGColor: '#52b788', nodeBGColorHover: '#52b788'},
+                children: [
+                  {
+                    id: 'c5_1_1',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=46', name: 'Hana Suzuki'},
+                    options: {nodeBGColor: '#52b788', nodeBGColorHover: '#52b788'},
+                  },
+                  {
+                    id: 'c5_1_2',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=47', name: 'Omar Shaikh'},
+                    options: {nodeBGColor: '#52b788', nodeBGColorHover: '#52b788'},
+                  },
+                  {
+                    id: 'c5_1_3',
+                    data: {imageURL: 'https://i.pravatar.cc/300?img=48', name: 'Cleo Durand'},
+                    options: {nodeBGColor: '#52b788', nodeBGColorHover: '#52b788'},
+                  },
+                ],
+              },
+              // leaf
+              {
+                id: 'c5_2',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=36', name: 'Yuki Tanaka'},
+                options: {nodeBGColor: '#d8f3dc', nodeBGColorHover: '#d8f3dc'},
+              },
+              // leaf
+              {
+                id: 'c5_3',
+                data: {imageURL: 'https://i.pravatar.cc/300?img=37', name: 'Paulo Costa'},
+                options: {nodeBGColor: '#95d5b2', nodeBGColorHover: '#95d5b2'},
               },
             ],
           },
         ],
       };
+
       const options = {
         contentKey: 'data',
-        width: 800,
+        width: 1400,
         nodeWidth: 150,
         nodeHeight: 100,
         fontColor: '#fff',
         borderColor: '#333',
         childrenSpacing: 50,
         siblingSpacing: 20,
-        direction: 'top',
+        direction: 'bottom',
         groupLeafNodes: true,
         nodeTemplate: (content) =>
           `<div style='display: flex;flex-direction: column;gap: 10px;justify-content: center;align-items: center;height: 100%;'>

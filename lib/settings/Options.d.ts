@@ -11,6 +11,11 @@ export interface NodeOptions {
     readonly borderRadius: string;
     readonly borderStyle: string;
     readonly borderWidth: number;
+    readonly collapseBadgeBGColor: string;
+    readonly collapseBadgeEnabled: boolean;
+    readonly collapseBadgeFontColor: string;
+    readonly collapseBadgeFontSize: string;
+    readonly collapseBadgeThreshold: number;
     readonly enableExpandCollapse: boolean;
     readonly expandCollapseButtonBGColor: string;
     readonly expandCollapseButtonBorderColor: string;
@@ -22,7 +27,7 @@ export interface NodeOptions {
     readonly nodeStyle: string;
     readonly nodeTemplate: (content: string) => string;
     readonly nodeWidth: number;
-    readonly onNodeClick?: (node: any) => void;
+    readonly onNodeClick?: (node: unknown) => void;
 }
 export interface TooltipOptions {
     readonly enableTooltip: boolean;
@@ -31,7 +36,7 @@ export interface TooltipOptions {
     readonly tooltipFontColor: string;
     readonly tooltipFontSize: string;
     readonly tooltipId: string;
-    readonly tooltipMaxWidth: number;
+    readonly tooltipMaxWidth: number | undefined;
     readonly tooltipMinWidth: number;
     readonly tooltipPadding: number;
     readonly tooltipTemplate?: (content: string) => string;
@@ -48,12 +53,20 @@ export interface EdgeOptions {
     readonly edgeColorHover: string;
     readonly edgeWidth: number;
 }
+export interface A11yOptions {
+    /** Enable ARIA semantics and keyboard navigation. Default: true */
+    readonly enabled?: boolean;
+    /** Override the default `aria-label` ("Organizational chart") on the root SVG. */
+    readonly label?: string;
+}
 export interface CommonOptions {
+    readonly a11y?: A11yOptions;
     readonly canvasStyle: string;
     readonly childrenSpacing: number;
     readonly containerClassName: string;
     readonly contentKey: string;
     readonly direction: TreeDirection;
+    readonly enableAnimation: boolean;
     readonly enableToolbar: boolean;
     readonly groupLeafNodes: boolean;
     readonly height: number | string;

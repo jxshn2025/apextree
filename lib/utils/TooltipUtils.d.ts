@@ -6,7 +6,7 @@ export interface TooltipConfig {
     readonly fontColor: string;
     readonly fontSize: string;
     readonly fontFamily: string;
-    readonly maxWidth: number;
+    readonly maxWidth: number | undefined;
     readonly minWidth: number;
     readonly offset: number;
     readonly padding: number;
@@ -24,7 +24,7 @@ export declare function calculateTooltipPosition(mouseX: number, mouseY: number,
 /**
  * show tooltip with content and positioning
  */
-export declare function showTooltip(chartContext: ChartContext, config: TooltipConfig, content: string, mouseX: number, mouseY: number, containerElement?: HTMLElement | null): void;
+export declare function showTooltip(chartContext: ChartContext, config: TooltipConfig, content: string, mouseX: number, mouseY: number, _containerElement?: HTMLElement | null): void;
 /**
  * hide tooltip
  */

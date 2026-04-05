@@ -15,7 +15,11 @@ npm install apextree
 ## Usage
 
 ```js
+// default import
 import ApexTree from 'apextree';
+
+// named import (TypeScript / ESM)
+import { ApexTree } from 'apextree';
 ```
 
 To create a basic tree with minimal configuration, write as follows:
@@ -58,50 +62,65 @@ const graph = tree.render(data);
 
 ## Tree Options
 
-The layout can be configured by either setting the properties in the table below by passing a second arg to Apextree with these properties set. The latter takes precedence.
+The layout can be configured by passing a second argument to `ApexTree` with the properties listed below.
 
-| Options | Default | Description |
-| --- | --- | --- |
-| width | 400 | The width of graph container |
-| height | 400 | The height of graph container |
-| direction | top | The direction of the tree to start rendering. Possible values: `top`, `bottom`, `left` and `right` |
-| contentKey | name | The key of content in passed data object |
-| siblingSpacing | 50 | The spacing between sibling nodes |
-| childrenSpacing | 50 | The spacing between children and parent |
-| highlightOnHover | true | Enable/disable highlight on hover |
-| containerClassName | root | The class name for the root container |
-| canvasStyle | None | The css styles for canvas root container |
-| enableToolbar | false | Enable/disable graph toolbar |
-| nodeWidth | 50 | The width of graph nodes |
-| nodeHeight | 30 | The height of graph nodes |
-| nodeTemplate | defaultNodeTemplate | The HTML template for nodes |
-| nodeBGColor | `#FFFFFF` | The background color of nodes |
-| nodeBGColorHover | `#FFFFFF` | The background color on hover of nodes |
-| borderWidth | 1 | The border width of the nodes in pixels |
-| borderStyle | solid | The border style of the nodes |
-| borderRadius | 5px | The border radius of the nodes in pixels |
-| borderColor | `#BCBCBC` | The border color of the nodes |
-| borderColorHover | `#5C6BC0` | The border color on hover of the nodes |
-| edgeWidth | `1` | The width for the edges |
-| edgeColor | `#BCBCBC` | The color for the edges |
-| edgeColorHover | `#5C6BC0` | The color for the edges when highlighted |
-| enableTooltip | false | Enable tooltip on hover of nodes |
-| groupLeafNodes | false | For stacking leaf nodes |
-| groupLeafNodesSpacing | 10 | Spacing between stacked leaf nodes |
-| tooltipId | `apextree-tooltip-container` | The tooltip HTML element id |
-| tooltipTemplate | defaultNodeTemplate | The HTML template for tooltip |
-| tooltipMaxWidth | undefined | The max width of the tooltip in pixels |
-| tooltipMinWidth | 100 | The min width of the tooltip in pixels |
-| tooltipBorderColor | `#BCBCBC` | The border color of tooltip |
-| tooltipBGColor | `#FFFFFF` | The background color of tooltip |
-| tooltipFontColor | `#000000` | The font color of tooltip text |
-| tooltipFontSize | `12px` | The font size of tooltip text |
-| tooltipPadding | 8 | The padding of tooltip in pixels (0 if custom tooltipTemplate is used) |
-| tooltipOffset | 10 | The offset distance between tooltip and cursor in pixels |
-| fontSize | 14px | The size of font of nodes |
-| fontFamily | None | The font family of nodes |
-| fontWeight | 400 | The font weight of nodes |
-| fontColor | `#000000` | The font color of nodes |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `width` | `number \| string` | `'100%'` | Width of the canvas. Accepts a pixel number or CSS percentage string. |
+| `height` | `number \| string` | `'auto'` | Height of the canvas. `'auto'` sizes to content. |
+| `direction` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Direction the tree grows from the root node. |
+| `contentKey` | `string` | `'name'` | Key in the data object used as the node display label. |
+| `siblingSpacing` | `number` | `50` | Horizontal distance between sibling nodes in pixels. |
+| `childrenSpacing` | `number` | `50` | Vertical distance between a parent node and its children in pixels. |
+| `highlightOnHover` | `boolean` | `true` | Highlight the hovered node and its connecting edges. |
+| `canvasStyle` | `string` | `''` | Arbitrary CSS injected onto the SVG root container element. |
+| `enableToolbar` | `boolean` | `false` | Show the zoom/pan toolbar. |
+| `enableAnimation` | `boolean` | `true` | Animate node expansion/collapse transitions. |
+| `enableExpandCollapse` | `boolean` | `true` | Show expand/collapse buttons on nodes that have children. |
+| `containerClassName` | `string` | `'root'` | CSS class name for the root SVG container element. |
+| `nodeWidth` | `number` | `50` | Width of each node in pixels. |
+| `nodeHeight` | `number` | `30` | Height of each node in pixels. |
+| `nodeTemplate` | `(content: string) => string` | built-in | Custom function returning an HTML string rendered inside each node. |
+| `nodeClassName` | `string` | `'apextree-node'` | CSS class name added to every node element. |
+| `nodeStyle` | `string` | `''` | Inline CSS string applied to each node element. |
+| `nodeBGColor` | `string` | `'#FFFFFF'` | Default background color of nodes. |
+| `nodeBGColorHover` | `string` | `'#FFFFFF'` | Background color of nodes on hover. |
+| `borderWidth` | `number` | `1` | Border width of nodes in pixels. |
+| `borderStyle` | `string` | `'solid'` | CSS border-style for nodes. |
+| `borderRadius` | `string` | `'5px'` | CSS border-radius for nodes. |
+| `borderColor` | `string` | `'#BCBCBC'` | Border color of nodes in their default state. |
+| `borderColorHover` | `string` | `'#5C6BC0'` | Border color of nodes on hover. |
+| `onNodeClick` | `(node: unknown) => void` | `undefined` | Callback fired when the user clicks a node. Receives the raw node data object. |
+| `edgeWidth` | `number` | `1` | Stroke width of connecting lines in pixels. |
+| `edgeColor` | `string` | `'#A1A1A1'` | Color of connecting lines between nodes. |
+| `edgeColorHover` | `string` | `'#5C6BC0'` | Color of connecting lines when highlighted on hover. |
+| `groupLeafNodes` | `boolean` | `false` | Stack leaf nodes vertically instead of spreading them horizontally. |
+| `groupLeafNodesSpacing` | `number` | `10` | Spacing between stacked leaf nodes in pixels. |
+| `collapseBadgeEnabled` | `boolean` | `true` | Show the collapse-count badge on collapsed nodes. |
+| `collapseBadgeThreshold` | `number` | `1` | Minimum number of hidden children required before the badge appears. |
+| `collapseBadgeBGColor` | `string` | `'#5C6BC0'` | Background color of the collapse-count badge. |
+| `collapseBadgeFontColor` | `string` | `'#FFFFFF'` | Font color of the collapse-count badge. |
+| `collapseBadgeFontSize` | `string` | `'12px'` | Font size of the collapse-count badge. |
+| `expandCollapseButtonBGColor` | `string` | `'#FFFFFF'` | Background color of the expand/collapse button. |
+| `expandCollapseButtonBorderColor` | `string` | `'#BCBCBC'` | Border color of the expand/collapse button. |
+| `enableTooltip` | `boolean` | `false` | Show a tooltip on node hover. |
+| `tooltipId` | `string` | `'apextree-tooltip-container'` | HTML `id` for the tooltip container element. |
+| `tooltipTemplate` | `(content: string) => string` | built-in | Custom function returning an HTML string for the tooltip content. |
+| `tooltipMaxWidth` | `number \| undefined` | `undefined` | Maximum width of the tooltip in pixels. |
+| `tooltipMinWidth` | `number` | `100` | Minimum width of the tooltip in pixels. |
+| `tooltipBorderColor` | `string` | `'#BCBCBC'` | Border color of the tooltip. |
+| `tooltipBGColor` | `string` | `'#FFFFFF'` | Background color of the tooltip. |
+| `tooltipFontColor` | `string` | `'#000000'` | Font color of tooltip text. |
+| `tooltipFontSize` | `string` | `'12px'` | Font size of tooltip text. |
+| `tooltipPadding` | `number` | `8` | Inner padding of the tooltip in pixels. Set to `0` when using a custom `tooltipTemplate`. |
+| `tooltipOffset` | `number` | `10` | Distance between the tooltip and the cursor in pixels. |
+| `fontColor` | `string` | `'#000000'` | CSS color for node text. |
+| `fontFamily` | `string` | `''` | CSS font-family for node text. Falls back to the page default when empty. |
+| `fontSize` | `string` | `'14px'` | CSS font-size for node text. |
+| `fontWeight` | `string` | `'400'` | CSS font-weight for node text. |
+| `a11y` | `{ enabled?: boolean, label?: string }` | `{ enabled: true, label: 'Organizational chart' }` | WCAG accessibility: enable ARIA semantics and customise the SVG `aria-label`. |
+| `viewPortWidth` | `number` | `800` | Internal SVG viewport width in pixels. |
+| `viewPortHeight` | `number` | `600` | Internal SVG viewport height in pixels. |
 
 Default node template
 
@@ -113,25 +132,19 @@ const defaultNodeTemplate = (content: string) => {
 
 ### Expected data format
 
-```json
-{
-  "id": "1",
-  "name": "A",
-  "children": []
-}
-```
+Each node in the tree has the following shape:
 
-Passed data object should contain id, name and children.
-
-For _id_ key, value of id can be unique otherwise edge highlight won't work as expected.
-
-For _name_ key, if using other than _name_ then specify key name in contentKey option
-
-For _children_ key, it contains list of child objects
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | Yes | Unique identifier. Must be stable across renders; used for edge highlighting and expand/collapse state. |
+| `name` | `string` | Yes | Display label rendered inside the node. Use `contentKey` if your data uses a different key. |
+| `children` | `NestedNode[]` | Yes | List of child nodes. Pass an empty array `[]` for leaf nodes. |
+| `data` | `T` | No | Arbitrary custom payload attached to the node. Available in callbacks such as `onNodeClick`. |
+| `options` | `object` | No | Per-node visual overrides. Accepts any subset of font, border, and tooltip options (see below). |
 
 **Example**
 
-```js
+```ts
 const data = {
   id: '1',
   name: 'A',
@@ -139,6 +152,11 @@ const data = {
     {
       id: '2',
       name: 'B',
+      data: { department: 'Engineering' },
+      options: {
+        nodeBGColor: '#e8f4fd',
+        borderColor: '#1a73e8',
+      },
       children: [
         {
           id: '3',
@@ -152,4 +170,47 @@ const data = {
     },
   ],
 };
+```
+
+#### Per-node options
+
+Individual nodes can override any visual option from `FontOptions`, `NodeOptions`, or `TooltipOptions` by supplying an `options` object on the node. For example:
+
+```ts
+{
+  id: 'vp1',
+  name: 'Bob',
+  options: {
+    nodeBGColor: '#fff3e0',
+    borderColor: '#e65100',
+    fontSize: '16px',
+    enableTooltip: true,
+  },
+  children: [],
+}
+```
+
+## Graph API
+
+`tree.render(data)` returns a `Graph` instance that exposes methods for programmatic control after the initial render:
+
+| Method | Description |
+| --- | --- |
+| `zoom(factor)` | Zoom the canvas by the given factor (e.g. `1.2` to zoom in, `0.8` to zoom out). |
+| `fitScreen()` | Fit the entire tree within the visible canvas area. |
+| `exportToSvg()` | Download the current tree as an SVG file. |
+| `expand(nodeId)` | Programmatically expand the node with the given `id`. |
+| `collapse(nodeId)` | Programmatically collapse the node with the given `id`. |
+| `changeLayout(direction)` | Switch the tree grow direction at runtime (`'top'` \| `'bottom'` \| `'left'` \| `'right'`). |
+| `construct(data)` | Replace the tree data and re-render without creating a new `ApexTree` instance. |
+
+```js
+const graph = tree.render(data);
+
+graph.zoom(1.2);
+graph.fitScreen();
+graph.collapse('node-id');
+graph.expand('node-id');
+graph.changeLayout('left');
+graph.exportToSvg();
 ```

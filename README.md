@@ -72,6 +72,7 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | `canvasStyle` | `string` | `''` | Arbitrary CSS injected onto the SVG root container element. |
 | `enableToolbar` | `boolean` | `false` | Show the zoom/pan toolbar. |
 | `enableAnimation` | `boolean` | `true` | Animate node expansion/collapse transitions. |
+| `enableExpandCollapseZoom` | `boolean` | `true` | Re-fit the viewBox to the new tree bounds when a node is collapsed or expanded. When `false` the viewBox stays fixed after collapse/expand interactions. |
 | `enableExpandCollapse` | `boolean` | `true` | Show expand/collapse buttons on nodes that have children. |
 | `containerClassName` | `string` | `'root'` | CSS class name for the root SVG container element. |
 | `nodeWidth` | `number` | `50` | Width of each node in pixels. |

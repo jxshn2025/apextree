@@ -158,6 +158,14 @@ export declare interface CommonOptions {
     readonly direction: TreeDirection;
     /** Animate node expansion/collapse transitions. @default true */
     readonly enableAnimation: boolean;
+    /**
+     * Re-fit the viewBox to the new tree bounds when a node is collapsed or
+     * expanded. When `true` (the default) the camera smoothly animates to the
+     * tightest bounding box that contains all visible nodes. Set to `false` to
+     * keep the viewBox fixed after collapse/expand interactions.
+     * @default true
+     */
+    readonly enableExpandCollapseZoom: boolean;
     /** Show the zoom/pan toolbar. @default false */
     readonly enableToolbar: boolean;
     /** Stack leaf nodes vertically instead of spreading them horizontally. @default false */
@@ -213,16 +221,29 @@ declare class Graph extends Paper {
     private data;
     private graph;
     private nodeMap;
-    private preservedPositions;
     /** Options resolved with CSS custom property overrides for the current render pass. */
     private renderOptions;
     /** Keyboard navigator instance (created lazily when a11y is enabled). */
     private keyboardNavigator;
     /** Tracks which node IDs were visible before the last render (for diff animation). */
     private prevNodeIds;
-    /** The node ID that triggered a collapse/expand, used to scope expand animations. */
-    private changedNodeId;
+    /** True after the first rAF fires — before this, viewBox changes snap instantly. */
+    private initialSetupDone;
+    /** Handle for an in-flight viewBox animation — cancelled when a new one starts. */
+    private viewBoxAnim;
+    /**
+     * Accumulated graph-level node positions across collapse/expand operations.
+     * Unlike a per-operation snapshot, this map is never cleared — it retains
+     * positions for nodes that were hidden in earlier operations so they can be
+     * restored when those nodes reappear (e.g. expand after collapse).
+     */
+    private savedGraphPositions;
     constructor(element: HTMLElement, options: TreeOptions, chartContext: ChartContext);
+    /**
+     * Snapshot graph-level (x, y) for every node in the current layout.
+     * Called before setGraphNodesAndEdges() destroys the old graph.
+     */
+    private mergeGraphPositions;
     private calculateLayout;
     private resetGraph;
     private setGraphNodesAndEdges;
@@ -232,6 +253,11 @@ declare class Graph extends Paper {
      * Used to drive rank-wave stagger delays during entrance animations.
      */
     private buildDepthMap;
+    /**
+     * Compute the tight bounding box from the fresh layout node positions.
+     * Used to drive viewBox fitting after collapse/expand.
+     */
+    private computeRenderedBoundingBox;
     /**
      * After the SVG is added to the DOM, query all node `<g>` elements and
      * run entrance animations for nodes that are new (not in prevNodeIds).
@@ -252,8 +278,7 @@ declare class Graph extends Paper {
     construct(data: NestedNode): void;
     expand(nodeId: string): void;
     fitScreen(): void;
-    render({ keepOldPosition, mode, }?: {
-        keepOldPosition?: boolean;
+    render({ mode }?: {
         mode?: 'initial' | 'expand' | 'collapse' | 'data-update';
     }): void;
 }
@@ -378,6 +403,7 @@ declare class Paper {
     exportToSvg(): void;
     resetViewBox(): void;
     updateViewBox(x: number, y: number, width: number, height: number): void;
+    resetPanZoomBase(): void;
     zoom(zoomFactor: number): void;
     getContainerElement(): HTMLElement;
     /**

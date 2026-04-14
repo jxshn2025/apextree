@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -9,8 +9,9 @@
       body {
         font-family: Arial, sans-serif;
         background: #f0f2f5;
-        margin: 0;
+        margin: 0 auto;
         padding: 20px;
+        max-width: 1070px;
       }
       h1 {
         font-size: 1.4rem;
@@ -50,8 +51,8 @@
   <body>
     <h1>ApexTree — Collapse Badges</h1>
     <p class="desc">
-      When a node is collapsed the expand/collapse button shows a <strong>+N</strong> badge indicating the total
-      number of hidden descendants. The badge disappears when the node is expanded again.
+      When a node is collapsed the expand/collapse button shows a <strong>+N</strong> badge indicating the total number
+      of hidden descendants. The badge disappears when the node is expanded again.
     </p>
 
     <div class="demo-row">
@@ -90,9 +91,7 @@
       <!-- CSS var theming -->
       <div class="demo-card">
         <h2>CSS custom property theming</h2>
-        <p class="hint">
-          Red badge via <code>--apex-tree-badge-bg</code> and <code>--apex-tree-badge-color</code>.
-        </p>
+        <p class="hint">Red badge via <code>--apex-tree-badge-bg</code> and <code>--apex-tree-badge-color</code>.</p>
         <div
           id="tree-css"
           style="--apex-tree-badge-bg: #e53935; --apex-tree-badge-color: #fff; --apex-tree-badge-font-size: 11px"
@@ -145,7 +144,7 @@
       };
 
       const sharedOpts = {
-        nodeWidth: 130,
+        nodeWidth: 120,
         nodeHeight: 44,
         childrenSpacing: 60,
         siblingSpacing: 24,
@@ -153,7 +152,7 @@
         canvasStyle: 'border: 1px solid #ddd; border-radius: 4px;',
         fontColor: '#333',
         borderColor: '#bbb',
-        width: 540,
+        width: 490,
         height: 340,
       };
 

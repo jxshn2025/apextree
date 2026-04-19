@@ -185,14 +185,14 @@ export declare interface CommonOptions {
      */
     readonly enableSearch: boolean;
     /**
-     * Node selection behaviour. See {@link SelectionMode}.
+     * Node selection behaviour. See {@link TreeSelectionMode}.
      *
      * When enabled, clicking a node applies an `aria-selected="true"` attribute
      * and a visible ring, and the selected id(s) are retrievable via
      * `tree.graph.getSelection()` / programmable via `tree.graph.setSelection()`.
      * @default false
      */
-    readonly enableSelection: SelectionMode_2;
+    readonly enableSelection: TreeSelectionMode;
     /** Show the zoom/pan toolbar. @default false */
     readonly enableToolbar: boolean;
     /** Stack leaf nodes vertically instead of spreading them horizontally. @default false */
@@ -625,19 +625,6 @@ declare class Paper {
 }
 
 /**
- * Node selection behaviour.
- *
- * - `false` — selection disabled (default). Nodes still receive focus and
- *   hover states, but clicking doesn't persist a selection ring.
- * - `'single'` — clicking a node selects it; a second click (or clicking
- *   elsewhere with `setSelection([])`) clears the previous selection.
- * - `'multi'` — clicking toggles the node in/out of the selection; any
- *   number of nodes can be selected simultaneously.
- */
-declare type SelectionMode_2 = 'multi' | 'single' | false;
-export { SelectionMode_2 as SelectionMode }
-
-/**
  * Options for the hover tooltip shown above each tree node.
  *
  * Enable with `enableTooltip: true`. Supply a `tooltipTemplate` function to
@@ -686,6 +673,18 @@ export declare type TreeDirection = 'bottom' | 'left' | 'right' | 'top';
  * For per-node overrides supply `options` on individual `NestedNode` objects.
  */
 export declare type TreeOptions = CommonOptions & EdgeOptions & FontOptions & NodeOptions & TooltipOptions;
+
+/**
+ * Node selection behaviour.
+ *
+ * - `false` — selection disabled (default). Nodes still receive focus and
+ *   hover states, but clicking doesn't persist a selection ring.
+ * - `'single'` — clicking a node selects it; a second click (or clicking
+ *   elsewhere with `setSelection([])`) clears the previous selection.
+ * - `'multi'` — clicking toggles the node in/out of the selection; any
+ *   number of nodes can be selected simultaneously.
+ */
+export declare type TreeSelectionMode = 'multi' | 'single' | false;
 
 /**
  * Built-in theme presets applied via CSS custom properties.

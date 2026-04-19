@@ -1,99 +1,164 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Custom Font Options - Creative Agency</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Quicksand', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <h2>Creative Agency</h2>
+    <p class="subtitle">
+      Custom Google Font with warm pastel cards (<code>fontFamily: 'Quicksand'</code>, <code>direction: 'left'</code>)
+    </p>
+    <div id="svg-tree"></div>
     <script>
+      const palette = {
+        rose: {bg: '#FFF1F2', border: '#FECDD3', borderHover: '#FB7185'},
+        peach: {bg: '#FFF7ED', border: '#FED7AA', borderHover: '#FB923C'},
+        lavender: {bg: '#FAF5FF', border: '#E9D5FF', borderHover: '#C084FC'},
+        mint: {bg: '#ECFDF5', border: '#A7F3D0', borderHover: '#34D399'},
+        sky: {bg: '#F0F9FF', border: '#BAE6FD', borderHover: '#38BDF8'},
+      };
+
+      const makeOpts = (p) => ({
+        nodeBGColor: p.bg,
+        nodeBGColorHover: p.bg,
+        borderColor: p.border,
+        borderColorHover: p.borderHover,
+      });
+
       const data = {
-        id: '1',
-        Role: 'General Manager',
-        Manager: 'parent',
+        id: 'founder',
+        name: 'Studio Founders',
+        options: makeOpts(palette.rose),
         children: [
           {
-            id: '2',
-            Role: 'HR Manager',
-            Manager: '1',
+            id: 'creative_dir',
+            name: 'Creative Direction',
+            options: makeOpts(palette.lavender),
             children: [
               {
-                id: '3',
-                Role: 'Trainers',
-                Manager: '2',
+                id: 'art',
+                name: 'Art Direction',
+                options: makeOpts(palette.lavender),
               },
               {
-                id: '4',
-                Role: 'Recruiting Team',
-                Manager: '2',
+                id: 'copy',
+                name: 'Copywriting',
+                options: makeOpts(palette.lavender),
               },
             ],
           },
           {
-            id: '6',
-            Role: 'Design Manager',
-            Manager: '1',
+            id: 'design_dir',
+            name: 'Design Studio',
+            options: makeOpts(palette.peach),
             children: [
               {
-                id: '7',
-                Role: 'Design Supervisor',
-                Manager: '6',
+                id: 'branding',
+                name: 'Branding',
+                options: makeOpts(palette.peach),
               },
               {
-                id: '8',
-                Role: 'Development Supervisor',
-                Manager: '6',
+                id: 'digital',
+                name: 'Digital Design',
+                options: makeOpts(palette.peach),
+              },
+              {
+                id: 'motion',
+                name: 'Motion Graphics',
+                options: makeOpts(palette.peach),
               },
             ],
           },
           {
-            id: '10',
-            Role: 'Operations Manager',
-            Manager: '1',
+            id: 'strategy',
+            name: 'Strategy & Growth',
+            options: makeOpts(palette.mint),
             children: [
               {
-                id: '11',
-                Role: 'Statistics Department',
-                Manager: '10',
+                id: 'research',
+                name: 'Market Research',
+                options: makeOpts(palette.mint),
               },
               {
-                id: '12',
-                Role: 'Logistics Department',
-                Manager: '10',
+                id: 'analytics',
+                name: 'Analytics',
+                options: makeOpts(palette.mint),
+              },
+            ],
+          },
+          {
+            id: 'production',
+            name: 'Production',
+            options: makeOpts(palette.sky),
+            children: [
+              {
+                id: 'photo',
+                name: 'Photography',
+                options: makeOpts(palette.sky),
+              },
+              {
+                id: 'video',
+                name: 'Video Production',
+                options: makeOpts(palette.sky),
               },
             ],
           },
         ],
       };
+
       const options = {
-        contentKey: 'Role',
-        width: 1200,
-        height: 500,
-        nodeWidth: 260,
-        nodeHeight: 80,
-        childrenSpacing: 100,
-        siblingSpacing: 30,
-        direction: 'top',
-        nodeTemplate: (content) => {
-          return `<div style='display: flex;justify-content: space-around;align-items: center;height: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;'>${content}</div>`;
-        },
-        tooltipMaxWidth: 120,
-        enableTooltip: true,
-        tooltipTemplate: (content) => {
-          return `<div style='display: flex;justify-content: space-between;text-align: center; align-items: center;padding: 10px;background-color: grey;color: white;'>${content}</div>`;
-        },
-        fontSize: '24px',
-        fontFamily: 'Satisfy, "cursive"',
+        contentKey: 'name',
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 600,
+        nodeWidth: 180,
+        nodeHeight: 48,
+        childrenSpacing: 80,
+        siblingSpacing: 14,
+        direction: 'left',
+        fontSize: '15px',
+        fontFamily: '"Quicksand", sans-serif',
         fontWeight: '600',
-        fontColor: '#388ac4',
-        borderColorHover: '#388ac4',
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        fontColor: '#6B21A8',
+        borderWidth: 2,
+        borderRadius: '12px',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        edgeColor: '#E9D5FF',
+        enableExpandCollapse: false,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #fefcff;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

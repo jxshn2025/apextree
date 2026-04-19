@@ -1,151 +1,215 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Right to Left View - Media Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <h2>Media Agency Structure</h2>
+    <p class="subtitle">
+      Right-to-left horizontal layout with warm terracotta palette (<code>direction: 'right'</code>)
+    </p>
+    <div id="svg-tree"></div>
     <script>
+      const palette = {
+        director: {bg: '#FEF3C7', border: '#F59E0B', borderHover: '#D97706'},
+        head: {bg: '#FFE4E6', border: '#FB7185', borderHover: '#E11D48'},
+        team: {bg: '#FFF1F2', border: '#FDA4AF', borderHover: '#F43F5E'},
+        creative: {bg: '#F0FDFA', border: '#5EEAD4', borderHover: '#14B8A6'},
+        support: {bg: '#FDF4FF', border: '#E879F9', borderHover: '#C026D3'},
+      };
+
+      const makeOpts = (p) => ({
+        nodeBGColor: p.bg,
+        nodeBGColorHover: p.bg,
+        borderColor: p.border,
+        borderColorHover: p.borderHover,
+      });
+
+      const nodeTemplate = (c) => `
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          height: 100%;
+          padding: 8px 14px;
+          box-sizing: border-box;
+        ">
+          <div style="
+            width: 32px; height: 32px; border-radius: 8px;
+            background: ${c.iconBg};
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+          ">${c.icon}</div>
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-weight: 600; font-size: 12px; line-height: 1.3; color: #292524;">${c.name}</div>
+            <div style="font-size: 10px; color: #78716c; margin-top: 1px;">${c.role}</div>
+          </div>
+        </div>`;
+
       const data = {
-        id: 'Lucas_Alex',
+        id: 'ceo',
         data: {
-          name: 'Lucas Alex',
-          imageURL: 'https://i.pravatar.cc/300?img=68',
+          name: 'Layla Al-Rashid',
+          role: 'Creative Director',
+          icon: '\uD83C\uDFA8',
+          iconBg: '#FDE68A',
         },
-        options: {
-          nodeBGColor: '#94ddff',
-        },
+        options: makeOpts(palette.director),
         children: [
           {
-            id: 'Alex_Lee',
+            id: 'content_head',
             data: {
-              name: 'Alex Lee',
-              imageURL: 'https://i.pravatar.cc/300?img=69',
+              name: 'Omar Hassan',
+              role: 'Head of Content',
+              icon: '\u270D\uFE0F',
+              iconBg: '#FECDD3',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts(palette.head),
             children: [
               {
-                id: 'Mia_Patel',
+                id: 'writer_1',
                 data: {
-                  name: 'Mia Patel',
-                  imageURL: 'https://i.pravatar.cc/300?img=49',
+                  name: 'Fatima Youssef',
+                  role: 'Senior Copywriter',
+                  icon: '\uD83D\uDCDD',
+                  iconBg: '#FFE4E6',
                 },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
+                options: makeOpts(palette.team),
               },
               {
-                id: 'Ryan_Clark',
+                id: 'writer_2',
                 data: {
-                  name: 'Ryan Clark',
-                  imageURL: 'https://i.pravatar.cc/300?img=13',
+                  name: 'Tariq Mansour',
+                  role: 'Content Strategist',
+                  icon: '\uD83D\uDCCA',
+                  iconBg: '#FFE4E6',
                 },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
-              },
-              {
-                id: 'Zoe_Wang',
-                data: {
-                  name: 'Zoe Wang',
-                  imageURL: 'https://i.pravatar.cc/300?img=54',
-                },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
+                options: makeOpts(palette.team),
               },
             ],
           },
           {
-            id: 'Leo_Kim',
+            id: 'design_head',
             data: {
-              name: 'Leo Kim',
-              imageURL: 'https://i.pravatar.cc/300?img=43',
+              name: 'Nour Abboud',
+              role: 'Head of Design',
+              icon: '\uD83D\uDD8C\uFE0F',
+              iconBg: '#CCFBF1',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts(palette.creative),
             children: [
               {
-                id: 'Ava_Jones',
+                id: 'designer_1',
                 data: {
-                  name: 'Ava Jones',
-                  imageURL: 'https://i.pravatar.cc/300?img=51',
+                  name: 'Sami Khoury',
+                  role: 'Visual Designer',
+                  icon: '\uD83C\uDF1F',
+                  iconBg: '#F0FDFA',
                 },
-                options: {
-                  nodeBGColor: '#d2edc5',
-                },
+                options: makeOpts(palette.creative),
               },
               {
-                id: 'Maya_Gupta',
+                id: 'designer_2',
                 data: {
-                  name: 'Maya Gupta',
-                  imageURL: 'https://i.pravatar.cc/300?img=45',
+                  name: 'Reem Darwish',
+                  role: 'Motion Designer',
+                  icon: '\uD83C\uDFAC',
+                  iconBg: '#F0FDFA',
                 },
-                options: {
-                  nodeBGColor: '#d2edc5',
-                },
+                options: makeOpts(palette.creative),
               },
-            ],
-          },
-
-          {
-            id: 'Lily_Chen',
-            data: {
-              name: 'Lily Chen',
-              imageURL: 'https://i.pravatar.cc/300?img=52',
-            },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
-            children: [
               {
-                id: 'Jake_Scott',
+                id: 'designer_3',
                 data: {
-                  name: 'Jake Scott',
-                  imageURL: 'https://i.pravatar.cc/300?img=65',
+                  name: 'Hadi Farah',
+                  role: 'Brand Designer',
+                  icon: '\u2728',
+                  iconBg: '#F0FDFA',
                 },
-                options: {
-                  nodeBGColor: '#e9f08f',
-                },
+                options: makeOpts(palette.creative),
               },
             ],
           },
           {
-            id: 'Max_Ruiz',
+            id: 'production_head',
             data: {
-              name: 'Max Ruiz',
-              imageURL: 'https://i.pravatar.cc/300?img=50',
+              name: 'Yasmin Khalil',
+              role: 'Head of Production',
+              icon: '\uD83C\uDFAC',
+              iconBg: '#F5D0FE',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts(palette.support),
+            children: [
+              {
+                id: 'producer_1',
+                data: {
+                  name: 'Karim Saleh',
+                  role: 'Video Producer',
+                  icon: '\uD83D\uDCF9',
+                  iconBg: '#FDF4FF',
+                },
+                options: makeOpts(palette.support),
+              },
+              {
+                id: 'producer_2',
+                data: {
+                  name: 'Dana Awad',
+                  role: 'Audio Producer',
+                  icon: '\uD83C\uDFA7',
+                  iconBg: '#FDF4FF',
+                },
+                options: makeOpts(palette.support),
+              },
+            ],
           },
         ],
       };
+
       const options = {
         contentKey: 'data',
-        width: 700,
-        nodeWidth: 150,
-        nodeHeight: 70,
-        childrenSpacing: 70,
-        siblingSpacing: 30,
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 540,
+        nodeWidth: 195,
+        nodeHeight: 52,
+        childrenSpacing: 80,
+        siblingSpacing: 12,
         direction: 'right',
-        nodeTemplate: (content) => {
-          console.log(content);
-          return `<div style='display: flex;flex-direction: row;justify-content: space-between;align-items: center;height: 100%; box-shadow: 1px 2px 4px #ccc; padding: 0 7px;'>
-          <img style='width: 50px;height: 50px;border-radius: 50%;' src='${content.imageURL}' alt=''>
-          <div style="font-weight: bold; font-family: Arial; font-size: 14px">${content.name}</div>
-         </div>`;
-        },
-        nodeStyle: 'box-shadow: -3px 6px 8px -5px rgba(0,0,0,0.31)',
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        edgeColor: '#FDBA74',
+        enableExpandCollapse: false,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #fffbf5;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

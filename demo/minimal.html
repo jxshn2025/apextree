@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - Minimal</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #fff;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="svg-tree"></div>
+
+    <script>
+      const data = {
+        id: 'maya',
+        name: 'Maya',
+        children: [
+          {
+            id: 'noah',
+            name: 'Noah',
+            children: [
+              {id: 'clara', name: 'Clara'},
+              {id: 'ethan', name: 'Ethan'},
+            ],
+          },
+          {
+            id: 'oscar',
+            name: 'Oscar',
+            children: [
+              {id: 'iris', name: 'Iris'},
+              {
+                id: 'felix',
+                name: 'Felix',
+                children: [
+                  {
+                    id: 'diana',
+                    name: 'Diana',
+                    children: [
+                      {id: 'leo', name: 'Leo'},
+                      {id: 'ruby', name: 'Ruby'},
+                      {id: 'finn', name: 'Finn'},
+                      {id: 'nora', name: 'Nora'},
+                    ],
+                  },
+                  {id: 'hugo', name: 'Hugo'},
+                ],
+              },
+              {id: 'alice', name: 'Alice'},
+            ],
+          },
+          {
+            id: 'stella',
+            name: 'Stella',
+            children: [
+              {
+                id: 'victor',
+                name: 'Victor',
+                children: [
+                  {id: 'liam', name: 'Liam'},
+                  {id: 'zara', name: 'Zara'},
+                ],
+              },
+              {id: 'ivy', name: 'Ivy'},
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 700,
+        nodeWidth: 90,
+        nodeHeight: 50,
+        childrenSpacing: 50,
+        siblingSpacing: 30,
+        direction: 'top',
+        edgeStyle: 'orthogonal',
+        edgeColor: '#333',
+        edgeWidth: 2,
+        borderWidth: 0,
+        borderRadius: '0',
+        nodeBGColor: 'transparent',
+        nodeBGColorHover: 'transparent',
+        nodeShadow: '',
+        nodeShadowHover: '',
+        fontColor: '#333',
+        fontSize: '20px',
+        fontWeight: '400',
+        highlightOnHover: false,
+        enableExpandCollapse: false,
+        enableToolbar: false,
+      };
+
+      const tree = new ApexTree(document.getElementById('svg-tree'), options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

@@ -63,6 +63,8 @@ export declare interface A11yOptions {
 declare class ApexTree extends BaseChart {
     graph: Graph;
     options: TreeOptions;
+    private searchControl;
+    private breadcrumbControl;
     /**
      * Create a new ApexTree instance.
      *
@@ -159,6 +161,13 @@ export declare interface CommonOptions {
     /** Animate node expansion/collapse transitions. @default true */
     readonly enableAnimation: boolean;
     /**
+     * Show a breadcrumb trail above the chart. The breadcrumb updates on node
+     * click to show the path from root to the selected node. Clicking a segment
+     * re-centers the camera on that ancestor.
+     * @default false
+     */
+    readonly enableBreadcrumb: boolean;
+    /**
      * Re-fit the viewBox to the new tree bounds when a node is collapsed or
      * expanded. When `true` (the default) the camera smoothly animates to the
      * tightest bounding box that contains all visible nodes. Set to `false` to
@@ -166,6 +175,24 @@ export declare interface CommonOptions {
      * @default true
      */
     readonly enableExpandCollapseZoom: boolean;
+    /**
+     * Show a search input inside the toolbar area. When enabled, typing filters
+     * nodes by the resolved label (string content from `contentKey`, or `name`
+     * when content is an object). Matching nodes get highlighted and the path
+     * from each match to the root is lineage-highlighted. Pressing Enter centers
+     * the camera on the first match.
+     * @default false
+     */
+    readonly enableSearch: boolean;
+    /**
+     * Node selection behaviour. See {@link SelectionMode}.
+     *
+     * When enabled, clicking a node applies an `aria-selected="true"` attribute
+     * and a visible ring, and the selected id(s) are retrievable via
+     * `tree.graph.getSelection()` / programmable via `tree.graph.setSelection()`.
+     * @default false
+     */
+    readonly enableSelection: SelectionMode_2;
     /** Show the zoom/pan toolbar. @default false */
     readonly enableToolbar: boolean;
     /** Stack leaf nodes vertically instead of spreading them horizontally. @default false */
@@ -176,6 +203,15 @@ export declare interface CommonOptions {
     readonly highlightOnHover: boolean;
     /** Horizontal distance between sibling nodes in pixels. @default 50 */
     readonly siblingSpacing: number;
+    /**
+     * Built-in theme preset. See {@link TreeTheme}.
+     *
+     * `'light'` uses the default soft-neutral palette; `'dark'` swaps to a
+     * dark-mode palette with slate backgrounds; `'custom'` disables the
+     * built-in CSS variable injection so host-page variables win cleanly.
+     * @default 'light'
+     */
+    readonly theme: TreeTheme;
     /** Internal SVG viewport height in pixels. @default 600 */
     readonly viewPortHeight: number;
     /** Internal SVG viewport width in pixels. @default 800 */
@@ -185,18 +221,54 @@ export declare interface CommonOptions {
 }
 
 /**
+ * Controls how edge (connector) colors are determined.
+ *
+ * - `'default'` — all edges use the global `edgeColor` option (default behaviour).
+ * - `'node'`    — each edge inherits the `borderColor` of the child node it
+ *                 connects into, giving every branch a color that matches its
+ *                 destination node. Per-node `borderColor` overrides are
+ *                 respected; the global `borderColor` is used as the fallback.
+ */
+export declare type EdgeColorMode = 'default' | 'node';
+
+export declare interface EdgeOptions {
+    /** Color of the connecting lines between nodes. @default '#D0D5DD' */
+    readonly edgeColor: string;
+    /** Color of connecting lines when highlighted on hover. @default '#5C6BC0' */
+    readonly edgeColorHover: string;
+    /**
+     * Determines how edge colors are resolved. See {@link EdgeColorMode}.
+     * @default 'default'
+     */
+    readonly edgeColorMode: EdgeColorMode;
+    /**
+     * Shape of the connecting lines. See {@link EdgeStyle}.
+     * @default 'orthogonal'
+     */
+    readonly edgeStyle: EdgeStyle;
+    /** Stroke width of connecting lines in pixels. @default 1 */
+    readonly edgeWidth: number;
+}
+
+/**
  * Options for the edges (connecting lines) drawn between parent and child nodes.
  *
  * Controls color, hover highlight color, and stroke width.
  */
-export declare interface EdgeOptions {
-    /** Color of the connecting lines between nodes. @default '#A1A1A1' */
-    readonly edgeColor: string;
-    /** Color of connecting lines when highlighted on hover. @default '#5C6BC0' */
-    readonly edgeColorHover: string;
-    /** Stroke width of connecting lines in pixels. @default 1 */
-    readonly edgeWidth: number;
-}
+/**
+ * Shape of the connecting lines drawn between parent and child nodes.
+ *
+ * - `'orthogonal'` — right-angle elbows with rounded corners (default; matches
+ *   the traditional org-chart look).
+ * - `'curved'` — smooth cubic Bézier curve from parent to child, similar to
+ *   d3-org-chart's compact vertical diagonal.
+ * - `'straight'` — a direct line from parent anchor to child anchor.
+ *
+ * The `'curved'` and `'straight'` options don't apply to the side-bracket
+ * connector drawn for grouped leaf nodes (that connector stays orthogonal
+ * because its purpose is to visually stack siblings).
+ */
+export declare type EdgeStyle = 'curved' | 'orthogonal' | 'straight';
 
 /**
  * Typography options applied to the text rendered inside each node.
@@ -225,6 +297,10 @@ declare class Graph extends Paper {
     private renderOptions;
     /** Keyboard navigator instance (created lazily when a11y is enabled). */
     private keyboardNavigator;
+    /** Breadcrumb listener invoked on node click when `enableBreadcrumb` is on. */
+    private breadcrumbHandler;
+    /** Selection state manager (created lazily on first render; reused across renders). */
+    private selectionController;
     /** Tracks which node IDs were visible before the last render (for diff animation). */
     private prevNodeIds;
     /** True after the first rAF fires — before this, viewBox changes snap instantly. */
@@ -278,6 +354,71 @@ declare class Graph extends Paper {
     construct(data: NestedNode): void;
     expand(nodeId: string): void;
     fitScreen(): void;
+    /** Expose the resolved node map so external controls (search, breadcrumb) can traverse. */
+    getNodeMap(): Record<string, Node_2>;
+    /**
+     * Create the selection controller if the user has opted in, or sync its
+     * mode to the current `enableSelection` value when it already exists.
+     * Lazily constructed so users who never use selection pay zero cost.
+     */
+    private ensureSelectionController;
+    /**
+     * Register a callback invoked with the node id on every node click, or with
+     * `null` to clear. Used by the optional breadcrumb control.
+     */
+    setBreadcrumbHandler(handler: ((nodeId: string | null) => void) | null): void;
+    /**
+     * Return the current list of selected node ids in insertion order.
+     * Returns an empty array when selection is disabled or nothing is selected.
+     */
+    getSelection(): string[];
+    /**
+     * Replace the selection with the given ids. No-op when `enableSelection`
+     * is `false`. In `'single'` mode only the first id is applied.
+     */
+    setSelection(ids: string[]): void;
+    /** Clear the current selection. */
+    clearSelection(): void;
+    /**
+     * Register a listener invoked with the new selection array whenever it
+     * changes. Pass `null` to unregister.
+     */
+    onSelectionChange(listener: ((ids: string[]) => void) | null): void;
+    /**
+     * Wire keyboard shortcuts (`/` focus search, `Esc` clear search) into the
+     * keyboard navigator. Safe to call before the navigator exists — the
+     * handlers will be picked up on the next render().
+     */
+    setKeyboardShortcutHandlers(handlers: {
+        onFocusSearch?: () => void;
+        onClearSearch?: () => void;
+    }): void;
+    private pendingShortcutHandlers;
+    /** Root node id of the currently rendered tree. */
+    getRootNodeId(): string;
+    /**
+     * Resolve the displayable label for a node: string content at `contentKey`,
+     * `.name` when content is an object, else `node.name`. Mirrors the label
+     * lookup used by the keyboard type-ahead.
+     */
+    getNodeLabel(nodeId: string): string;
+    /**
+     * Return every non-pseudo node id whose resolved label contains `query`
+     * (case-insensitive). Empty query returns no matches.
+     */
+    findNodesByQuery(query: string): string[];
+    /**
+     * Apply search highlight state to the DOM: highlights every match's
+     * lineage back to root, tags matched nodes with `data-apextree-match`.
+     * Pass an empty array to clear the state.
+     */
+    setSearchHighlight(matchIds: string[]): void;
+    /**
+     * Center the camera on a specific node, keeping the current zoom level.
+     * Used by search (Enter key), breadcrumb clicks, and the `f` keyboard shortcut.
+     * Animates when `enableAnimation` is on, snaps otherwise.
+     */
+    centerOnNode(nodeId: string): void;
     render({ mode }?: {
         mode?: 'initial' | 'expand' | 'collapse' | 'data-update';
     }): void;
@@ -315,6 +456,21 @@ export declare interface NestedNode<T = undefined> {
     readonly name: string;
     /** Per-node overrides for font, border, tooltip, and other visual options. */
     readonly options?: FontOptions & NodeOptions & TooltipOptions;
+}
+
+declare interface Node_2<T = undefined> {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    readonly children: Array<string>;
+    readonly data: T;
+    readonly hiddenChildren: Array<string> | undefined;
+    readonly id: string;
+    readonly name: string;
+    readonly onlyLeafNodes?: boolean;
+    readonly options?: FontOptions & NodeOptions & TooltipOptions;
+    readonly parent?: string;
 }
 
 /**
@@ -363,14 +519,66 @@ export declare interface NodeOptions {
     readonly nodeClassName: string;
     /** Height of each node in pixels. @default 30 */
     readonly nodeHeight: number;
+    /**
+     * CSS `box-shadow` applied to nodes in their default state.
+     * Set to an empty string to disable the drop shadow.
+     * @default '0 1px 2px rgba(16,24,40,0.06), 0 1px 3px rgba(16,24,40,0.1)'
+     */
+    readonly nodeShadow: string;
+    /**
+     * CSS `box-shadow` applied to nodes on hover. Paired with a subtle lift
+     * via `translateY(-1px)`. Set to an empty string to keep the shadow constant.
+     * @default '0 4px 6px -1px rgba(16,24,40,0.1), 0 2px 4px -2px rgba(16,24,40,0.1)'
+     */
+    readonly nodeShadowHover: string;
     /** Inline CSS string applied to each node element. */
     readonly nodeStyle: string;
-    /** Custom function returning an HTML string rendered inside each node. */
-    readonly nodeTemplate: (content: string) => string;
+    /**
+     * Custom function returning an HTML string rendered inside each node.
+     * Receives the value at `contentKey` on the node data — typically a string,
+     * but may be any shape when `contentKey` points at a nested object.
+     */
+    readonly nodeTemplate: (content: unknown) => string;
     /** Width of each node in pixels. @default 50 */
     readonly nodeWidth: number;
     /** Callback fired when the user clicks a node. Receives the raw node data object. */
     readonly onNodeClick?: (node: unknown) => void;
+}
+
+/**
+ * Optional canonical shape for node content when using `contentKey: 'data'`
+ * (or any other nested key). The built-in node template understands these
+ * fields and lays them out as a professional org-chart card: avatar on the
+ * left, name/title/subtitle stacked, an optional status chip, and an
+ * optional coloured left stripe (`accentColor`).
+ *
+ * None of the fields are required — supplying only `name` renders a simple
+ * centered label identical to the pre-`OrgNodeData` behaviour, so existing
+ * integrations are unaffected.
+ */
+export declare interface OrgNodeData {
+    /**
+     * Colored left stripe on the card, useful for categorising roles or
+     * departments. Any valid CSS color.
+     */
+    readonly accentColor?: string;
+    /**
+     * Status chip shown in the upper-right corner of the card.
+     * - `text` — chip label (required on the badge, not on the node).
+     * - `color` — chip background color; defaults to a soft indigo.
+     */
+    readonly badge?: {
+        color?: string;
+        text: string;
+    };
+    /** Avatar URL rendered as a 40×40 circular image on the left of the card. */
+    readonly imageURL?: string;
+    /** Primary display label. Equivalent to the top-level `NestedNode.name`. */
+    readonly name?: string;
+    /** Third line — typically a department or team. Smaller / lower contrast. */
+    readonly subtitle?: string;
+    /** Second line — typically a job title. Medium size, lower opacity. */
+    readonly title?: string;
 }
 
 declare class Paper {
@@ -408,10 +616,26 @@ declare class Paper {
     getContainerElement(): HTMLElement;
     /**
      * Apply WAI-ARIA tree semantics to the root SVG canvas element.
-     * Sets role="tree", aria-label, and aria-multiselectable.
+     *
+     * Sets `role="tree"`, `aria-label`, and `aria-multiselectable` (true only
+     * when `selectionMode === 'multi'`). Also injects the focus-ring and
+     * selection-ring stylesheets that styling user interactions depend on.
      */
-    setTreeA11yAttributes(label: string): void;
+    setTreeA11yAttributes(label: string, selectionMode?: 'multi' | 'single' | false): void;
 }
+
+/**
+ * Node selection behaviour.
+ *
+ * - `false` — selection disabled (default). Nodes still receive focus and
+ *   hover states, but clicking doesn't persist a selection ring.
+ * - `'single'` — clicking a node selects it; a second click (or clicking
+ *   elsewhere with `setSelection([])`) clears the previous selection.
+ * - `'multi'` — clicking toggles the node in/out of the selection; any
+ *   number of nodes can be selected simultaneously.
+ */
+declare type SelectionMode_2 = 'multi' | 'single' | false;
+export { SelectionMode_2 as SelectionMode }
 
 /**
  * Options for the hover tooltip shown above each tree node.
@@ -462,5 +686,17 @@ export declare type TreeDirection = 'bottom' | 'left' | 'right' | 'top';
  * For per-node overrides supply `options` on individual `NestedNode` objects.
  */
 export declare type TreeOptions = CommonOptions & EdgeOptions & FontOptions & NodeOptions & TooltipOptions;
+
+/**
+ * Built-in theme presets applied via CSS custom properties.
+ *
+ * - `'light'` — default. Soft neutrals suitable for most pages.
+ * - `'dark'` — dark palette with slate backgrounds and muted edge colors;
+ *   suitable for dark-mode apps and high-contrast presentations.
+ * - `'custom'` — disables built-in CSS variable injection so any variables
+ *   the host page sets on the container (or a parent) win without being
+ *   overridden.
+ */
+export declare type TreeTheme = 'custom' | 'dark' | 'light';
 
 export { }

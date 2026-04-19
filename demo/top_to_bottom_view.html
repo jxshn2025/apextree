@@ -1,115 +1,303 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Top to Bottom View - Company Departments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <h2>Company Departments</h2>
+    <p class="subtitle">
+      Top-to-bottom layout with department color coding and toolbar (<code>direction: 'top'</code>,
+      <code>enableToolbar: true</code>)
+    </p>
+    <div id="svg-tree"></div>
     <script>
+      const depts = {
+        hq: {bg: '#F8FAFC', border: '#94A3B8', borderHover: '#64748B', accent: '#475569'},
+        finance: {bg: '#EFF6FF', border: '#93C5FD', borderHover: '#3B82F6', accent: '#2563EB'},
+        hr: {bg: '#FDF2F8', border: '#F9A8D4', borderHover: '#EC4899', accent: '#DB2777'},
+        marketing: {bg: '#FFF7ED', border: '#FDBA74', borderHover: '#F97316', accent: '#EA580C'},
+        product: {bg: '#F0FDF4', border: '#86EFAC', borderHover: '#22C55E', accent: '#16A34A'},
+        sales: {bg: '#EEF2FF', border: '#A5B4FC', borderHover: '#6366F1', accent: '#4F46E5'},
+      };
+
+      const makeOpts = (dept) => ({
+        nodeBGColor: depts[dept].bg,
+        nodeBGColorHover: depts[dept].bg,
+        borderColor: depts[dept].border,
+        borderColorHover: depts[dept].borderHover,
+      });
+
+      const nodeTemplate = (c) => `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 100%;
+          padding: 10px 8px 8px;
+          box-sizing: border-box;
+          text-align: center;
+          overflow: hidden;
+        ">
+          <img src="${c.img}" alt=""
+            style="
+              width: 40px; height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+              flex-shrink: 0;
+              border: 2px solid ${c.accent};
+              margin-bottom: 6px;
+            " />
+          <div style="font-weight: 600; font-size: 11px; color: #1e293b; line-height: 1.3;">${c.name}</div>
+          <div style="font-size: 9px; color: #64748b; margin-top: 2px;">${c.title}</div>
+          <div style="font-size: 8px; color: ${c.accent}; margin-top: 2px; font-weight: 500;">${c.dept}</div>
+        </div>`;
+
       const data = {
-        id: 'ms',
+        id: 'ceo',
         data: {
-          imageURL: 'https://i.pravatar.cc/300?img=68',
-          name: 'Margret Swanson',
+          name: 'Alexandra Whitfield',
+          title: 'Chief Executive Officer',
+          dept: 'Headquarters',
+          img: 'https://i.pravatar.cc/300?img=12',
+          accent: depts.hq.accent,
         },
-        options: {
-          nodeBGColor: '#cdb4db',
-          nodeBGColorHover: '#cdb4db',
-        },
+        options: makeOpts('hq'),
         children: [
           {
-            id: 'mh',
+            id: 'cfo',
             data: {
-              imageURL: 'https://i.pravatar.cc/300?img=69',
-              name: 'Mark Hudson',
+              name: 'Robert Cheng',
+              title: 'VP Finance',
+              dept: 'Finance',
+              img: 'https://i.pravatar.cc/300?img=52',
+              accent: depts.finance.accent,
             },
-            options: {
-              nodeBGColor: '#ffafcc',
-              nodeBGColorHover: '#ffafcc',
-            },
+            options: makeOpts('finance'),
             children: [
               {
-                id: 'kb',
+                id: 'accounting',
                 data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=65',
-                  name: 'Karyn Borbas',
+                  name: 'Julia Becker',
+                  title: 'Accounting Lead',
+                  dept: 'Accounting',
+                  img: 'https://i.pravatar.cc/300?img=47',
+                  accent: depts.finance.accent,
                 },
-                options: {
-                  nodeBGColor: '#f8ad9d',
-                  nodeBGColorHover: '#f8ad9d',
-                },
+                options: makeOpts('finance'),
               },
               {
-                id: 'cr',
+                id: 'treasury',
                 data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=60',
-                  name: 'Chris Rup',
+                  name: 'Patrick Doyle',
+                  title: 'Treasury Manager',
+                  dept: 'Treasury',
+                  img: 'https://i.pravatar.cc/300?img=60',
+                  accent: depts.finance.accent,
                 },
-                options: {
-                  nodeBGColor: '#c9cba3',
-                  nodeBGColorHover: '#c9cba3',
-                },
+                options: makeOpts('finance'),
               },
             ],
           },
           {
-            id: 'cs',
+            id: 'chro',
             data: {
-              imageURL: 'https://i.pravatar.cc/300?img=59',
-              name: 'Chris Lysek',
+              name: 'Maria Santos',
+              title: 'VP Human Resources',
+              dept: 'Human Resources',
+              img: 'https://i.pravatar.cc/300?img=26',
+              accent: depts.hr.accent,
             },
-            options: {
-              nodeBGColor: '#00afb9',
-              nodeBGColorHover: '#00afb9',
-            },
+            options: makeOpts('hr'),
             children: [
               {
-                id: 'Noah_Chandler',
+                id: 'talent',
                 data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=57',
-                  name: 'Noah Chandler',
+                  name: 'Lily Nguyen',
+                  title: 'Talent Acquisition',
+                  dept: 'Recruiting',
+                  img: 'https://i.pravatar.cc/300?img=15',
+                  accent: depts.hr.accent,
                 },
-                options: {
-                  nodeBGColor: '#84a59d',
-                  nodeBGColorHover: '#84a59d',
-                },
+                options: makeOpts('hr'),
               },
               {
-                id: 'Felix_Wagner',
+                id: 'people_ops',
                 data: {
-                  imageURL: 'https://i.pravatar.cc/300?img=52',
-                  name: 'Felix Wagner',
+                  name: 'Andre Wilson',
+                  title: 'People Ops Lead',
+                  dept: 'People Ops',
+                  img: 'https://i.pravatar.cc/300?img=33',
+                  accent: depts.hr.accent,
                 },
-                options: {
-                  nodeBGColor: '#0081a7',
-                  nodeBGColorHover: '#0081a7',
+                options: makeOpts('hr'),
+              },
+            ],
+          },
+          {
+            id: 'cmo',
+            data: {
+              name: 'Jake Morrison',
+              title: 'VP Marketing',
+              dept: 'Marketing',
+              img: 'https://i.pravatar.cc/300?img=68',
+              accent: depts.marketing.accent,
+            },
+            options: makeOpts('marketing'),
+            children: [
+              {
+                id: 'brand',
+                data: {
+                  name: 'Chloe Dumont',
+                  title: 'Brand Strategist',
+                  dept: 'Brand',
+                  img: 'https://i.pravatar.cc/300?img=44',
+                  accent: depts.marketing.accent,
                 },
+                options: makeOpts('marketing'),
+              },
+              {
+                id: 'growth',
+                data: {
+                  name: 'Ryan Torres',
+                  title: 'Growth Manager',
+                  dept: 'Growth',
+                  img: 'https://i.pravatar.cc/300?img=32',
+                  accent: depts.marketing.accent,
+                },
+                options: makeOpts('marketing'),
+              },
+              {
+                id: 'comms',
+                data: {
+                  name: 'Ines Ferreira',
+                  title: 'Comms Manager',
+                  dept: 'Communications',
+                  img: 'https://i.pravatar.cc/300?img=45',
+                  accent: depts.marketing.accent,
+                },
+                options: makeOpts('marketing'),
+              },
+            ],
+          },
+          {
+            id: 'cpo',
+            data: {
+              name: 'Kenji Tanaka',
+              title: 'VP Product',
+              dept: 'Product',
+              img: 'https://i.pravatar.cc/300?img=25',
+              accent: depts.product.accent,
+            },
+            options: makeOpts('product'),
+            children: [
+              {
+                id: 'design',
+                data: {
+                  name: 'Eva Lindgren',
+                  title: 'Design Lead',
+                  dept: 'Product Design',
+                  img: 'https://i.pravatar.cc/300?img=36',
+                  accent: depts.product.accent,
+                },
+                options: makeOpts('product'),
+              },
+              {
+                id: 'research',
+                data: {
+                  name: 'Omar Farouk',
+                  title: 'Research Lead',
+                  dept: 'User Research',
+                  img: 'https://i.pravatar.cc/300?img=53',
+                  accent: depts.product.accent,
+                },
+                options: makeOpts('product'),
+              },
+            ],
+          },
+          {
+            id: 'cro',
+            data: {
+              name: 'Sarah Mitchell',
+              title: 'VP Sales',
+              dept: 'Sales',
+              img: 'https://i.pravatar.cc/300?img=48',
+              accent: depts.sales.accent,
+            },
+            options: makeOpts('sales'),
+            children: [
+              {
+                id: 'enterprise',
+                data: {
+                  name: 'Derek Chang',
+                  title: 'Enterprise Lead',
+                  dept: 'Enterprise Sales',
+                  img: 'https://i.pravatar.cc/300?img=57',
+                  accent: depts.sales.accent,
+                },
+                options: makeOpts('sales'),
+              },
+              {
+                id: 'partnerships',
+                data: {
+                  name: 'Amina Diallo',
+                  title: 'Partnerships Lead',
+                  dept: 'Partnerships',
+                  img: 'https://i.pravatar.cc/300?img=43',
+                  accent: depts.sales.accent,
+                },
+                options: makeOpts('sales'),
               },
             ],
           },
         ],
       };
+
       const options = {
         contentKey: 'data',
-        width: 800,
-        nodeWidth: 150,
-        nodeHeight: 100,
-        fontColor: '#fff',
-        borderColor: '#333',
-        childrenSpacing: 50,
-        siblingSpacing: 20,
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 700,
+        nodeWidth: 140,
+        nodeHeight: 120,
+        childrenSpacing: 70,
+        siblingSpacing: 12,
         direction: 'top',
-        nodeTemplate: (content) =>
-          `<div style='display: flex;flex-direction: column;gap: 10px;justify-content: center;align-items: center;height: 100%;'>
-          <img style='width: 50px;height: 50px;border-radius: 50%;' src='${content.imageURL}' alt='' />
-          <div style="font-weight: bold; font-family: Arial; font-size: 14px">${content.name}</div>
-         </div>`,
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        edgeStyle: 'orthogonal',
+        edgeWidth: 1,
+        enableExpandCollapse: false,
         enableToolbar: true,
+        edgeColorMode: 'node',
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #ffffff;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

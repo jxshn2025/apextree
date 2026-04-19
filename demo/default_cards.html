@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - Modern Defaults</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #101828;
+        min-height: 100vh;
+      }
+
+      .page-header {
+        padding: 24px 32px 16px;
+        background: #ffffff;
+        border-bottom: 1px solid #e4e7ec;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: #475467;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        padding: 16px 32px;
+        background: #ffffff;
+        border-bottom: 1px solid #e4e7ec;
+      }
+
+      .toolbar label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #344054;
+      }
+
+      .toolbar .group {
+        display: inline-flex;
+        border: 1px solid #d0d5dd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .toolbar .group button {
+        padding: 6px 14px;
+        border: none;
+        background: #ffffff;
+        color: #344054;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        border-right: 1px solid #d0d5dd;
+        transition:
+          background 150ms ease,
+          color 150ms ease;
+      }
+
+      .toolbar .group button:last-child {
+        border-right: none;
+      }
+
+      .toolbar .group button:hover {
+        background: #f9fafb;
+      }
+
+      .toolbar .group button.active {
+        background: #5c6bc0;
+        color: #ffffff;
+      }
+
+      #svg-tree {
+        margin: 24px auto;
+        max-width: 1000px;
+      }
+
+      #page-wrap {
+        background: #f5f7fb;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="page-wrap">
+      <div class="page-header">
+        <h1>Modern Defaults</h1>
+        <p>Structured node cards, refined shadows, hover lift, and switchable edge styles.</p>
+      </div>
+
+      <div class="toolbar">
+        <label>Edge style</label>
+        <div class="group" id="edge-style-group">
+          <button data-style="orthogonal" class="active">Orthogonal</button>
+          <button data-style="curved">Curved</button>
+          <button data-style="straight">Straight</button>
+        </div>
+      </div>
+
+      <div id="svg-tree"></div>
+    </div>
+
+    <script>
+      const data = {
+        id: 'ceo',
+        data: {
+          imageURL: 'https://i.pravatar.cc/300?img=12',
+          name: 'Alex Morgan',
+          title: 'Chief Executive Officer',
+          subtitle: 'Executive Team',
+          badge: {text: 'CEO', color: '#EEF2FF'},
+        },
+        children: [
+          {
+            id: 'cto',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=52',
+              name: 'Sam Reyes',
+              title: 'Chief Technology Officer',
+              subtitle: 'Engineering',
+              badge: {text: 'CTO', color: '#ECFDF3'},
+            },
+            children: [
+              {
+                id: 'eng-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=15',
+                  name: 'Priya Shah',
+                  title: 'VP, Platform',
+                  subtitle: 'Infra & Services',
+                },
+              },
+              {
+                id: 'eng-2',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=32',
+                  name: 'Marco Rossi',
+                  title: 'VP, Product Eng',
+                  subtitle: 'Web & Mobile',
+                },
+              },
+            ],
+          },
+          {
+            id: 'cfo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=47',
+              name: 'Jordan Liu',
+              title: 'Chief Financial Officer',
+              subtitle: 'Finance',
+              badge: {text: 'CFO', color: '#FFF7E6'},
+            },
+            children: [
+              {
+                id: 'fin-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=25',
+                  name: 'Ada Fischer',
+                  title: 'Director, FP&A',
+                  subtitle: 'Finance',
+                },
+              },
+            ],
+          },
+          {
+            id: 'cpo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=36',
+              name: 'Riley Chen',
+              title: 'Chief People Officer',
+              subtitle: 'People & Culture',
+              badge: {text: 'CPO', color: '#FCEEF3'},
+            },
+            children: [
+              {
+                id: 'hr-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=41',
+                  name: 'Noa Bennett',
+                  title: 'Head of Talent',
+                  subtitle: 'People & Culture',
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        contentKey: 'data',
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 600,
+        nodeWidth: 260,
+        nodeHeight: 88,
+        childrenSpacing: 70,
+        siblingSpacing: 40,
+        direction: 'top',
+        edgeStyle: 'orthogonal',
+        enableToolbar: true,
+      };
+
+      const container = document.getElementById('svg-tree');
+      let tree = new ApexTree(container, options);
+      tree.render(data);
+
+      const buttons = document.querySelectorAll('#edge-style-group button');
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          container.innerHTML = '';
+          tree = new ApexTree(container, {...options, edgeStyle: btn.dataset.style});
+          tree.render(data);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,152 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Left to Right View - Software Team</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <h2>Software Engineering Team</h2>
+    <p class="subtitle">
+      Horizontal left-to-right layout showing team structure with role badges (<code>direction: 'left'</code>)
+    </p>
+    <div id="svg-tree"></div>
     <script>
+      const levelColors = {
+        lead: {bg: '#EEF2FF', border: '#818CF8', accent: '#6366F1'},
+        senior: {bg: '#F0FDF4', border: '#86EFAC', accent: '#22C55E'},
+        mid: {bg: '#FFF7ED', border: '#FDBA74', accent: '#F97316'},
+        junior: {bg: '#FDF2F8', border: '#F9A8D4', accent: '#EC4899'},
+      };
+
+      const makeOpts = (level) => ({
+        nodeBGColor: levelColors[level].bg,
+        nodeBGColorHover: levelColors[level].bg,
+        borderColor: levelColors[level].border,
+        borderColorHover: levelColors[level].accent,
+      });
+
+      const nodeTemplate = (c) => `
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          height: 100%;
+          padding: 8px 12px;
+          box-sizing: border-box;
+        ">
+          <img src="${c.imageURL}" alt="" style="
+            width: 36px; height: 36px; border-radius: 50%;
+            object-fit: cover; flex-shrink: 0;
+          " />
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-weight: 600; font-size: 12px; line-height: 1.3; color: #1e293b;">${c.name}</div>
+            <div style="font-size: 10px; color: #64748b; margin-top: 1px;">${c.role}</div>
+          </div>
+          <span style="
+            font-size: 9px; font-weight: 500;
+            padding: 2px 6px; border-radius: 999px;
+            background: ${c.badgeColor}; color: #fff;
+            white-space: nowrap; flex-shrink: 0;
+          ">${c.badge}</span>
+        </div>`;
+
       const data = {
-        id: 'Lucas_Alex',
+        id: 'eng_lead',
         data: {
-          name: 'Lucas Alex',
-          imageURL: 'https://i.pravatar.cc/300?img=68',
+          name: 'Priya Sharma',
+          role: 'Engineering Lead',
+          imageURL: 'https://i.pravatar.cc/300?img=32',
+          badge: 'Lead',
+          badgeColor: '#6366F1',
         },
-        options: {
-          nodeBGColor: '#94ddff',
-        },
+        options: makeOpts('lead'),
         children: [
           {
-            id: 'Alex_Lee',
+            id: 'frontend_lead',
             data: {
-              name: 'Alex Lee',
-              imageURL: 'https://i.pravatar.cc/300?img=69',
+              name: 'James Chen',
+              role: 'Frontend Lead',
+              imageURL: 'https://i.pravatar.cc/300?img=33',
+              badge: 'Senior',
+              badgeColor: '#22C55E',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts('senior'),
             children: [
               {
-                id: 'Mia_Patel',
+                id: 'fe_1',
                 data: {
-                  name: 'Mia Patel',
-                  imageURL: 'https://i.pravatar.cc/300?img=49',
+                  name: 'Sofia Rivera',
+                  role: 'React Developer',
+                  imageURL: 'https://i.pravatar.cc/300?img=47',
+                  badge: 'Mid',
+                  badgeColor: '#F97316',
                 },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
+                options: makeOpts('mid'),
               },
               {
-                id: 'Ryan_Clark',
+                id: 'fe_2',
                 data: {
-                  name: 'Ryan Clark',
-                  imageURL: 'https://i.pravatar.cc/300?img=13',
+                  name: 'Tom Ashford',
+                  role: 'UI Engineer',
+                  imageURL: 'https://i.pravatar.cc/300?img=11',
+                  badge: 'Junior',
+                  badgeColor: '#EC4899',
                 },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
-              },
-              {
-                id: 'Zoe_Wang',
-                data: {
-                  name: 'Zoe Wang',
-                  imageURL: 'https://i.pravatar.cc/300?img=54',
-                },
-                options: {
-                  nodeBGColor: '#e3c2ff',
-                },
+                options: makeOpts('junior'),
               },
             ],
           },
           {
-            id: 'Leo_Kim',
+            id: 'backend_lead',
             data: {
-              name: 'Leo Kim',
-              imageURL: 'https://i.pravatar.cc/300?img=43',
+              name: 'Amara Okafor',
+              role: 'Backend Lead',
+              imageURL: 'https://i.pravatar.cc/300?img=45',
+              badge: 'Senior',
+              badgeColor: '#22C55E',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts('senior'),
             children: [
               {
-                id: 'Ava_Jones',
+                id: 'be_1',
                 data: {
-                  name: 'Ava Jones',
-                  imageURL: 'https://i.pravatar.cc/300?img=51',
+                  name: 'Erik Lindqvist',
+                  role: 'API Engineer',
+                  imageURL: 'https://i.pravatar.cc/300?img=53',
+                  badge: 'Mid',
+                  badgeColor: '#F97316',
                 },
-                options: {
-                  nodeBGColor: '#d2edc5',
-                },
+                options: makeOpts('mid'),
               },
               {
-                id: 'Maya_Gupta',
+                id: 'be_2',
                 data: {
-                  name: 'Maya Gupta',
-                  imageURL: 'https://i.pravatar.cc/300?img=45',
+                  name: 'Mei-Lin Wu',
+                  role: 'Database Engineer',
+                  imageURL: 'https://i.pravatar.cc/300?img=44',
+                  badge: 'Mid',
+                  badgeColor: '#F97316',
                 },
-                options: {
-                  nodeBGColor: '#d2edc5',
-                },
+                options: makeOpts('mid'),
               },
-            ],
-          },
-
-          {
-            id: 'Lily_Chen',
-            data: {
-              name: 'Lily Chen',
-              imageURL: 'https://i.pravatar.cc/300?img=52',
-            },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
-            children: [
               {
-                id: 'Jake_Scott',
+                id: 'be_3',
                 data: {
-                  name: 'Jake Scott',
-                  imageURL: 'https://i.pravatar.cc/300?img=65',
+                  name: 'Carlos Vega',
+                  role: 'DevOps Engineer',
+                  imageURL: 'https://i.pravatar.cc/300?img=14',
+                  badge: 'Junior',
+                  badgeColor: '#EC4899',
                 },
-                options: {
-                  nodeBGColor: '#e9f08f',
-                },
+                options: makeOpts('junior'),
               },
             ],
           },
           {
-            id: 'Max_Ruiz',
+            id: 'qa_lead',
             data: {
-              name: 'Max Ruiz',
-              imageURL: 'https://i.pravatar.cc/300?img=50',
+              name: 'Nadia Petrova',
+              role: 'QA Lead',
+              imageURL: 'https://i.pravatar.cc/300?img=26',
+              badge: 'Senior',
+              badgeColor: '#22C55E',
             },
-            options: {
-              nodeBGColor: '#ffc7c2',
-            },
+            options: makeOpts('senior'),
+            children: [
+              {
+                id: 'qa_1',
+                data: {
+                  name: 'Ren Takahashi',
+                  role: 'Test Automation',
+                  imageURL: 'https://i.pravatar.cc/300?img=58',
+                  badge: 'Mid',
+                  badgeColor: '#F97316',
+                },
+                options: makeOpts('mid'),
+              },
+            ],
           },
         ],
       };
+
       const options = {
         contentKey: 'data',
-        width: 800,
-        height: 'auto',
-        nodeWidth: 150,
-        nodeHeight: 70,
-        childrenSpacing: 70,
-        siblingSpacing: 30,
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 520,
+        nodeWidth: 200,
+        nodeHeight: 54,
+        childrenSpacing: 80,
+        siblingSpacing: 12,
         direction: 'left',
-        nodeTemplate: (content) => {
-          console.log(content);
-          return `<div style='display: flex;flex-direction: row;justify-content: space-between;align-items: center;height: 100%; box-shadow: 1px 2px 4px #ccc; padding: 0 7px;'>
-          <img style='width: 50px;height: 50px;border-radius: 50%;' src='${content.imageURL}' alt=''>
-          <div style="font-weight: bold; font-family: Arial; font-size: 14px">${content.name}</div>
-         </div>`;
-        },
-        nodeStyle: 'box-shadow: -3px 6px 8px -5px rgba(0,0,0,0.31)',
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        edgeColor: '#C7D2FE',
+        enableExpandCollapse: false,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #fafbfc;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

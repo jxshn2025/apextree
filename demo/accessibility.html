@@ -3,42 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ApexTree – Accessibility Demo (WCAG 2.1 AA)</title>
+    <title>ApexTree - Accessibility Demo (WCAG 2.1 AA)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f5f5f5;
+        font-family: 'Inter', sans-serif;
+        margin: 0 auto;
+        padding: 20px 0;
+        background: #fff;
+        max-width: 1000px;
       }
 
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 8px;
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
       }
 
-      .description {
-        max-width: 700px;
-        margin-bottom: 20px;
-        font-size: 0.9rem;
-        color: #444;
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
         line-height: 1.5;
       }
 
       .keyboard-guide {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
         padding: 16px 20px;
-        max-width: 700px;
-        margin-bottom: 24px;
-        font-size: 0.875rem;
+        margin-bottom: 20px;
+        font-size: 13px;
       }
 
-      .keyboard-guide h2 {
-        margin-top: 0;
-        font-size: 1rem;
+      .keyboard-guide h3 {
+        margin: 0 0 10px 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
       }
 
       .keyboard-guide table {
@@ -50,49 +57,43 @@
       .keyboard-guide th {
         padding: 4px 8px;
         text-align: left;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 12px;
       }
 
       .keyboard-guide th {
         font-weight: 600;
-        color: #555;
+        color: #64748b;
       }
 
       kbd {
-        background: #eee;
-        border: 1px solid #ccc;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
         border-radius: 3px;
         padding: 1px 5px;
         font-family: monospace;
         font-size: 0.8em;
       }
 
-      #svg-tree {
-        margin: 0 auto;
-      }
-
       .a11y-note {
         margin-top: 16px;
-        font-size: 0.8rem;
-        color: #666;
-        max-width: 700px;
+        font-size: 12px;
+        color: #94a3b8;
+        line-height: 1.6;
       }
     </style>
   </head>
   <body>
-    <h1>ApexTree – Accessibility Demo</h1>
-
-    <div class="description">
-      This demo showcases WCAG 2.1 AA compliance for ApexTree:
-      <strong>ARIA tree/treeitem semantics</strong>, <strong>keyboard-only navigation</strong>, and a
-      <strong>visible focus indicator</strong>. Use the keyboard shortcuts below to navigate the org chart without a
-      mouse.
-    </div>
+    <h2>Accessibility Demo &mdash; WCAG 2.1 AA</h2>
+    <p class="subtitle">
+      Full keyboard navigation, ARIA tree semantics, and visible focus indicators &mdash; configure via
+      <code>a11y: { enabled: true }</code>
+    </p>
 
     <div id="svg-tree"></div>
 
     <div class="keyboard-guide" role="complementary" aria-label="Keyboard shortcuts">
-      <h2>Keyboard shortcuts</h2>
+      <h3>Keyboard Shortcuts</h3>
       <table>
         <thead>
           <tr>
@@ -106,15 +107,15 @@
             <td>Move focus into / out of the tree</td>
           </tr>
           <tr>
-            <td><kbd>↓</kbd> / <kbd>↑</kbd></td>
+            <td><kbd>&darr;</kbd> / <kbd>&uarr;</kbd></td>
             <td>Move to next / previous visible node</td>
           </tr>
           <tr>
-            <td><kbd>→</kbd></td>
+            <td><kbd>&rarr;</kbd></td>
             <td>Expand collapsed node, or move to first child</td>
           </tr>
           <tr>
-            <td><kbd>←</kbd></td>
+            <td><kbd>&larr;</kbd></td>
             <td>Collapse expanded node, or move to parent</td>
           </tr>
           <tr>
@@ -134,8 +135,8 @@
             <td>Toggle selection on focused node</td>
           </tr>
           <tr>
-            <td><kbd>a</kbd>–<kbd>z</kbd></td>
-            <td>Type-ahead: jump to next node whose name starts with the character</td>
+            <td><kbd>a</kbd>-<kbd>z</kbd></td>
+            <td>Type-ahead: jump to next node starting with that letter</td>
           </tr>
         </tbody>
       </table>
@@ -149,45 +150,119 @@
     </p>
 
     <script>
+      const depts = {
+        exec: {accent: '#6366f1', bg: '#eef2ff'},
+        eng: {accent: '#10b981', bg: '#ecfdf5'},
+        mkt: {accent: '#f59e0b', bg: '#fffbeb'},
+        finance: {accent: '#3b82f6', bg: '#eff6ff'},
+      };
+
       const data = {
         id: 'ceo',
-        name: 'Alexandra Rivera',
-        data: {name: 'Alexandra Rivera', title: 'Chief Executive Officer'},
+        data: {
+          name: 'Alexandra Rivera',
+          title: 'Chief Executive Officer',
+          img: 'https://i.pravatar.cc/300?img=12',
+          dept: depts.exec,
+        },
+        options: {
+          nodeBGColor: depts.exec.bg,
+          nodeBGColorHover: depts.exec.bg,
+          borderColor: '#c7d2fe',
+          borderColorHover: '#6366f1',
+        },
         children: [
           {
             id: 'cto',
-            name: 'Marcus Chen',
-            data: {name: 'Marcus Chen', title: 'Chief Technology Officer'},
+            data: {
+              name: 'Marcus Chen',
+              title: 'Chief Technology Officer',
+              img: 'https://i.pravatar.cc/300?img=52',
+              dept: depts.eng,
+            },
+            options: {
+              nodeBGColor: depts.eng.bg,
+              nodeBGColorHover: depts.eng.bg,
+              borderColor: '#a7f3d0',
+              borderColorHover: '#10b981',
+            },
             children: [
               {
                 id: 'eng1',
-                name: 'Priya Sharma',
-                data: {name: 'Priya Sharma', title: 'Engineering Manager'},
+                data: {
+                  name: 'Priya Sharma',
+                  title: 'Engineering Manager',
+                  img: 'https://i.pravatar.cc/300?img=15',
+                  dept: depts.eng,
+                },
+                options: {
+                  nodeBGColor: depts.eng.bg,
+                  nodeBGColorHover: depts.eng.bg,
+                  borderColor: '#a7f3d0',
+                  borderColorHover: '#10b981',
+                },
                 children: [
                   {
                     id: 'dev1',
-                    name: 'Luis Ortega',
-                    data: {name: 'Luis Ortega', title: 'Senior Developer'},
-                    children: [],
+                    data: {
+                      name: 'Luis Ortega',
+                      title: 'Senior Developer',
+                      img: 'https://i.pravatar.cc/300?img=33',
+                      dept: depts.eng,
+                    },
+                    options: {
+                      nodeBGColor: depts.eng.bg,
+                      nodeBGColorHover: depts.eng.bg,
+                      borderColor: '#a7f3d0',
+                      borderColorHover: '#10b981',
+                    },
                   },
                   {
                     id: 'dev2',
-                    name: 'Aisha Kofi',
-                    data: {name: 'Aisha Kofi', title: 'Developer'},
-                    children: [],
+                    data: {
+                      name: 'Aisha Kofi',
+                      title: 'Developer',
+                      img: 'https://i.pravatar.cc/300?img=45',
+                      dept: depts.eng,
+                    },
+                    options: {
+                      nodeBGColor: depts.eng.bg,
+                      nodeBGColorHover: depts.eng.bg,
+                      borderColor: '#a7f3d0',
+                      borderColorHover: '#10b981',
+                    },
                   },
                 ],
               },
               {
                 id: 'eng2',
-                name: 'Tomasz Nowak',
-                data: {name: 'Tomasz Nowak', title: 'Platform Lead'},
+                data: {
+                  name: 'Tomasz Nowak',
+                  title: 'Platform Lead',
+                  img: 'https://i.pravatar.cc/300?img=60',
+                  dept: depts.eng,
+                },
+                options: {
+                  nodeBGColor: depts.eng.bg,
+                  nodeBGColorHover: depts.eng.bg,
+                  borderColor: '#a7f3d0',
+                  borderColorHover: '#10b981',
+                },
                 children: [
                   {
                     id: 'dev3',
-                    name: 'Fatima Al-Rashid',
-                    data: {name: 'Fatima Al-Rashid', title: 'DevOps Engineer'},
-                    children: [],
+                    data: {
+                      name: 'Fatima Al-Rashid',
+                      title: 'DevOps Engineer',
+                      img: 'https://i.pravatar.cc/300?img=26',
+                      dept: depts.eng,
+                    },
+                    options: {
+                      nodeBGColor: depts.eng.bg,
+                      nodeBGColorHover: depts.eng.bg,
+                      borderColor: '#a7f3d0',
+                      borderColorHover: '#10b981',
+                    },
                   },
                 ],
               },
@@ -195,33 +270,80 @@
           },
           {
             id: 'cmo',
-            name: 'Danielle Brooks',
-            data: {name: 'Danielle Brooks', title: 'Chief Marketing Officer'},
+            data: {
+              name: 'Danielle Brooks',
+              title: 'Chief Marketing Officer',
+              img: 'https://i.pravatar.cc/300?img=47',
+              dept: depts.mkt,
+            },
+            options: {
+              nodeBGColor: depts.mkt.bg,
+              nodeBGColorHover: depts.mkt.bg,
+              borderColor: '#fde68a',
+              borderColorHover: '#f59e0b',
+            },
             children: [
               {
                 id: 'mkt1',
-                name: 'Yusuf Ibrahim',
-                data: {name: 'Yusuf Ibrahim', title: 'Brand Manager'},
-                children: [],
+                data: {
+                  name: 'Yusuf Ibrahim',
+                  title: 'Brand Manager',
+                  img: 'https://i.pravatar.cc/300?img=68',
+                  dept: depts.mkt,
+                },
+                options: {
+                  nodeBGColor: depts.mkt.bg,
+                  nodeBGColorHover: depts.mkt.bg,
+                  borderColor: '#fde68a',
+                  borderColorHover: '#f59e0b',
+                },
               },
               {
                 id: 'mkt2',
-                name: 'Soo-Jin Park',
-                data: {name: 'Soo-Jin Park', title: 'Growth Manager'},
-                children: [],
+                data: {
+                  name: 'Soo-Jin Park',
+                  title: 'Growth Manager',
+                  img: 'https://i.pravatar.cc/300?img=36',
+                  dept: depts.mkt,
+                },
+                options: {
+                  nodeBGColor: depts.mkt.bg,
+                  nodeBGColorHover: depts.mkt.bg,
+                  borderColor: '#fde68a',
+                  borderColorHover: '#f59e0b',
+                },
               },
             ],
           },
           {
             id: 'cfo',
-            name: 'Robert Osei',
-            data: {name: 'Robert Osei', title: 'Chief Financial Officer'},
+            data: {
+              name: 'Robert Osei',
+              title: 'Chief Financial Officer',
+              img: 'https://i.pravatar.cc/300?img=25',
+              dept: depts.finance,
+            },
+            options: {
+              nodeBGColor: depts.finance.bg,
+              nodeBGColorHover: depts.finance.bg,
+              borderColor: '#bfdbfe',
+              borderColorHover: '#3b82f6',
+            },
             children: [
               {
                 id: 'fin1',
-                name: 'Nadia Volkov',
-                data: {name: 'Nadia Volkov', title: 'Finance Analyst'},
-                children: [],
+                data: {
+                  name: 'Nadia Volkov',
+                  title: 'Finance Analyst',
+                  img: 'https://i.pravatar.cc/300?img=44',
+                  dept: depts.finance,
+                },
+                options: {
+                  nodeBGColor: depts.finance.bg,
+                  nodeBGColorHover: depts.finance.bg,
+                  borderColor: '#bfdbfe',
+                  borderColorHover: '#3b82f6',
+                },
               },
             ],
           },
@@ -230,20 +352,20 @@
 
       const options = {
         contentKey: 'data',
-        width: 900,
-        height: 640,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 640,
         nodeWidth: 160,
-        nodeHeight: 80,
+        nodeHeight: 120,
         fontColor: '#222',
         borderColor: '#BCBCBC',
         childrenSpacing: 60,
-        siblingSpacing: 30,
+        siblingSpacing: 20,
         direction: 'top',
         enableExpandCollapse: true,
-        canvasStyle: 'border: 1px solid #ddd; background: #fff; border-radius: 6px;',
+        canvasStyle: 'border: 1px solid #e2e8f0; background: #fafafa; border-radius: 8px;',
         enableToolbar: true,
 
-        /* ── Accessibility options ── */
         a11y: {
           enabled: true,
           label: 'Company organizational chart',
@@ -253,16 +375,24 @@
           `<div style="
               display: flex;
               flex-direction: column;
-              justify-content: center;
               align-items: center;
               height: 100%;
-              padding: 6px;
+              padding: 10px 8px 8px;
               box-sizing: border-box;
               text-align: center;
-              gap: 4px;
+              overflow: hidden;
             ">
-            <div style="font-weight: 700; font-size: 13px;">${content.name}</div>
-            <div style="font-size: 11px; color: #666;">${content.title}</div>
+            <img src="${content.img}" alt=""
+              style="
+                width: 40px; height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+                flex-shrink: 0;
+                border: 2px solid ${content.dept.accent};
+                margin-bottom: 6px;
+              " />
+            <div style="font-weight: 600; font-size: 11px; color: #1e293b; line-height: 1.3;">${content.name}</div>
+            <div style="font-size: 9px; color: #64748b; margin-top: 2px;">${content.title}</div>
           </div>`,
 
         onNodeClick: (node) => {

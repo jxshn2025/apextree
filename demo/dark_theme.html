@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - Dark Theme</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #0f172a;
+        color: #f3f4f6;
+        min-height: 100vh;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        padding: 24px 32px 16px;
+        background: #1f2937;
+        border-bottom: 1px solid #374151;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: #9ca3af;
+      }
+
+      .theme-toggle {
+        margin-top: 14px;
+        display: inline-flex;
+        gap: 8px;
+      }
+
+      .theme-toggle button {
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid #374151;
+        background: #111827;
+        color: #d1d5db;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .theme-toggle button[aria-pressed='true'] {
+        background: #818cf8;
+        border-color: #818cf8;
+        color: #0f172a;
+        font-weight: 600;
+      }
+
+      #svg-tree {
+        margin: 24px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Dark Theme</h1>
+      <p>
+        Pass <code>theme: 'dark'</code> to flip the built-in CSS variables to a slate + indigo palette. Use
+        <code>'custom'</code> to disable built-in variables entirely and hand styling to your own stylesheet.
+      </p>
+      <div class="theme-toggle" role="group" aria-label="Theme selector">
+        <button data-theme="light" aria-pressed="false">Light</button>
+        <button data-theme="dark" aria-pressed="true">Dark</button>
+      </div>
+    </div>
+
+    <div id="svg-tree"></div>
+
+    <script>
+      const data = {
+        id: 'ceo',
+        data: {
+          imageURL: 'https://i.pravatar.cc/300?img=12',
+          name: 'Alex Morgan',
+          title: 'Chief Executive Officer',
+          subtitle: 'Executive Team',
+          badge: {text: 'CEO'},
+        },
+        children: [
+          {
+            id: 'cto',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=52',
+              name: 'Sam Reyes',
+              title: 'Chief Technology Officer',
+              subtitle: 'Engineering',
+              badge: {text: 'CTO'},
+            },
+            children: [
+              {
+                id: 'eng-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=15',
+                  name: 'Priya Shah',
+                  title: 'VP, Platform',
+                  subtitle: 'Infra & Services',
+                },
+              },
+              {
+                id: 'eng-2',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=32',
+                  name: 'Marco Rossi',
+                  title: 'VP, Product Eng',
+                  subtitle: 'Web & Mobile',
+                },
+              },
+            ],
+          },
+          {
+            id: 'cfo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=47',
+              name: 'Jordan Liu',
+              title: 'Chief Financial Officer',
+              subtitle: 'Finance',
+              badge: {text: 'CFO'},
+            },
+          },
+          {
+            id: 'cpo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=36',
+              name: 'Riley Chen',
+              title: 'Chief People Officer',
+              subtitle: 'People & Culture',
+              badge: {text: 'CPO'},
+            },
+          },
+        ],
+      };
+
+      const container = document.getElementById('svg-tree');
+      let currentTheme = 'dark';
+      let tree;
+
+      function renderWith(theme) {
+        container.innerHTML = '';
+        tree = new ApexTree(container, {
+          contentKey: 'data',
+          width: '100%',
+          viewPortWidth: 1000,
+          viewPortHeight: 560,
+          nodeWidth: 260,
+          nodeHeight: 78,
+          childrenSpacing: 70,
+          siblingSpacing: 30,
+          direction: 'top',
+          edgeStyle: 'curved',
+          enableToolbar: true,
+          theme,
+        });
+        tree.render(data);
+        document.body.style.background = theme === 'dark' ? '#0F172A' : '#F5F7FB';
+      }
+
+      renderWith('dark');
+
+      document.querySelectorAll('.theme-toggle button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const theme = btn.getAttribute('data-theme');
+          if (theme === currentTheme) return;
+          currentTheme = theme;
+          document.querySelectorAll('.theme-toggle button').forEach((b) => {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+          });
+          renderWith(theme);
+        });
+      });
+    </script>
+  </body>
+</html>

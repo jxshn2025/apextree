@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - Selection, Search & Breadcrumb</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #f5f7fb;
+        color: #101828;
+        min-height: 100vh;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        padding: 24px 32px 16px;
+        background: #ffffff;
+        border-bottom: 1px solid #e4e7ec;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: #475467;
+      }
+
+      .controls {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      .controls label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+      }
+
+      .controls button {
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid #e4e7ec;
+        background: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .controls button:hover {
+        background: #f9fafb;
+      }
+
+      #selection-readout {
+        margin-top: 12px;
+        padding: 8px 12px;
+        background: #f9fafb;
+        border: 1px solid #e4e7ec;
+        border-radius: 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        color: #344054;
+        min-height: 32px;
+      }
+
+      .shortcut-hint {
+        display: inline-flex;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .shortcut-hint kbd {
+        background: #f2f4f7;
+        border: 1px solid #e4e7ec;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      #svg-tree {
+        margin: 24px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Selection, Search & Breadcrumb</h1>
+      <p>
+        Click nodes to select them. Switch between <code>single</code> and <code>multi</code> modes, or programmatically
+        select/clear from the API. Use the search box to highlight matches; click any node to update the breadcrumb
+        trail.
+      </p>
+      <div class="controls">
+        <label><input type="radio" name="mode" value="single" checked /> single</label>
+        <label><input type="radio" name="mode" value="multi" /> multi</label>
+        <button id="select-eng">Select all engineers</button>
+        <button id="clear">Clear selection</button>
+      </div>
+      <div id="selection-readout">Selected: (none)</div>
+      <div class="shortcut-hint">
+        <span><kbd>/</kbd> focus search</span>
+        <span><kbd>f</kbd> fit to screen</span>
+        <span><kbd>+</kbd> / <kbd>-</kbd> zoom</span>
+        <span><kbd>Esc</kbd> clear search</span>
+      </div>
+    </div>
+
+    <div id="svg-tree"></div>
+
+    <script>
+      const data = {
+        id: 'ceo',
+        data: {
+          imageURL: 'https://i.pravatar.cc/300?img=12',
+          name: 'Alex Morgan',
+          title: 'Chief Executive Officer',
+          subtitle: 'Executive Team',
+          badge: {text: 'CEO', color: '#EEF2FF'},
+        },
+        children: [
+          {
+            id: 'cto',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=52',
+              name: 'Sam Reyes',
+              title: 'Chief Technology Officer',
+              subtitle: 'Engineering',
+              badge: {text: 'CTO', color: '#ECFDF3'},
+            },
+            children: [
+              {
+                id: 'eng-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=15',
+                  name: 'Priya Shah',
+                  title: 'VP, Platform',
+                  subtitle: 'Infra & Services',
+                },
+              },
+              {
+                id: 'eng-2',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=32',
+                  name: 'Marco Rossi',
+                  title: 'VP, Product Eng',
+                  subtitle: 'Web & Mobile',
+                },
+              },
+              {
+                id: 'eng-3',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=22',
+                  name: 'Kai Nakamura',
+                  title: 'Staff Engineer',
+                  subtitle: 'Data Platform',
+                },
+              },
+            ],
+          },
+          {
+            id: 'cfo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=47',
+              name: 'Jordan Liu',
+              title: 'Chief Financial Officer',
+              subtitle: 'Finance',
+              badge: {text: 'CFO', color: '#FFF7E6'},
+            },
+            children: [
+              {
+                id: 'fin-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=25',
+                  name: 'Ada Fischer',
+                  title: 'Director, FP&A',
+                  subtitle: 'Finance',
+                },
+              },
+            ],
+          },
+          {
+            id: 'cpo',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=36',
+              name: 'Riley Chen',
+              title: 'Chief People Officer',
+              subtitle: 'People & Culture',
+              badge: {text: 'CPO', color: '#FCEEF3'},
+            },
+            children: [
+              {
+                id: 'hr-1',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=41',
+                  name: 'Noa Bennett',
+                  title: 'Head of Talent',
+                  subtitle: 'People & Culture',
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      const container = document.getElementById('svg-tree');
+      const readout = document.getElementById('selection-readout');
+      let tree;
+      let graph;
+
+      function render(mode) {
+        container.innerHTML = '';
+        tree = new ApexTree(container, {
+          contentKey: 'data',
+          width: '100%',
+          viewPortWidth: 1000,
+          viewPortHeight: 600,
+          nodeWidth: 260,
+          nodeHeight: 78,
+          childrenSpacing: 70,
+          siblingSpacing: 40,
+          direction: 'top',
+          edgeStyle: 'curved',
+          enableToolbar: true,
+          enableSearch: true,
+          enableBreadcrumb: true,
+          enableSelection: mode,
+        });
+        graph = tree.render(data);
+        graph.onSelectionChange((ids) => {
+          readout.textContent = ids.length ? `Selected: ${ids.join(', ')}` : 'Selected: (none)';
+        });
+      }
+
+      render('single');
+
+      document.querySelectorAll('input[name="mode"]').forEach((input) => {
+        input.addEventListener('change', () => {
+          if (input.checked) render(input.value);
+        });
+      });
+
+      document.getElementById('select-eng').addEventListener('click', () => {
+        graph.setSelection(['eng-1', 'eng-2', 'eng-3']);
+      });
+
+      document.getElementById('clear').addEventListener('click', () => {
+        graph.clearSelection();
+      });
+    </script>
+  </body>
+</html>

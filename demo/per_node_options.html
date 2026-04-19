@@ -3,148 +3,136 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Per Node Options - Species Classification</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Quicksand', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto"></div>
+    <h2>Species Classification</h2>
+    <p class="subtitle">Each node has its own pastel background and border via per-node <code>options</code></p>
+    <div id="svg-tree"></div>
     <script>
+      const palettes = {
+        root: {bg: '#F3E8FF', border: '#C084FC', borderHover: '#A855F7'},
+        plant: {bg: '#DCFCE7', border: '#86EFAC', borderHover: '#22C55E'},
+        fungi: {bg: '#FEF3C7', border: '#FCD34D', borderHover: '#F59E0B'},
+        lichen: {bg: '#E0F2FE', border: '#7DD3FC', borderHover: '#0EA5E9'},
+        animal: {bg: '#FFE4E6', border: '#FDA4AF', borderHover: '#F43F5E'},
+        invertebrate: {bg: '#FFF1F2', border: '#FECDD3', borderHover: '#FB7185'},
+        vertebrate: {bg: '#FDE68A', border: '#FBBF24', borderHover: '#D97706'},
+        fish: {bg: '#CFFAFE', border: '#67E8F9', borderHover: '#06B6D4'},
+        amphibian: {bg: '#D1FAE5', border: '#6EE7B7', borderHover: '#10B981'},
+        reptile: {bg: '#FEF9C3', border: '#FDE047', borderHover: '#EAB308'},
+        bird: {bg: '#E0E7FF', border: '#A5B4FC', borderHover: '#6366F1'},
+        mammal: {bg: '#FCE7F3', border: '#F9A8D4', borderHover: '#EC4899'},
+        insect: {bg: '#FFEDD5', border: '#FDBA74', borderHover: '#F97316'},
+        mollusc: {bg: '#F0FDFA', border: '#99F6E4', borderHover: '#14B8A6'},
+        crustacean: {bg: '#EFF6FF', border: '#93C5FD', borderHover: '#3B82F6'},
+        moss: {bg: '#ECFCCB', border: '#BEF264', borderHover: '#84CC16'},
+        fern: {bg: '#D1FAE5', border: '#6EE7B7', borderHover: '#10B981'},
+      };
+
+      const makeOpts = (key) => ({
+        nodeBGColor: palettes[key].bg,
+        nodeBGColorHover: palettes[key].bg,
+        borderColor: palettes[key].border,
+        borderColorHover: palettes[key].borderHover,
+        borderWidth: 2,
+      });
+
       const data = {
         id: '1',
         name: 'Species',
         options: {
-          fontSize: '25px',
-          fontFamily: 'sans-serif',
+          ...makeOpts('root'),
+          fontSize: '22px',
           fontWeight: 600,
-          fontColor: '#a06dcc',
-          borderWidth: 2,
-          borderColor: '#a06dcc',
-          borderColorHover: '#ec327e',
-          nodeBGColor: '#eedfff',
-          nodeBGColorHover: '#d5c3ff',
+          fontColor: '#7C3AED',
         },
         children: [
           {
             id: '2',
             name: 'Plants',
-            category: 'Species',
-            options: {
-              nodeBGColorHover: '#d7c7e3',
-              borderColorHover: '#e563c7',
-            },
+            options: {...makeOpts('plant'), fontColor: '#16A34A'},
             children: [
-              {
-                id: '3',
-                name: 'Mosses',
-                category: 'Plants',
-                options: {
-                  nodeBGColorHover: '#d7c7e3',
-                  borderColorHover: '#e563c7',
-                },
-              },
-              {
-                id: '4',
-                name: 'Ferns',
-                category: 'Plants',
-              },
-              {
-                id: '5',
-                name: 'Gymnosperms',
-                category: 'Plants',
-              },
-              {
-                id: '6',
-                name: 'Dicotyledens',
-                category: 'Plants',
-              },
-              {
-                id: '7',
-                name: 'Monocotyledens',
-                category: 'Plants',
-              },
+              {id: '3', name: 'Mosses', options: makeOpts('moss')},
+              {id: '4', name: 'Ferns', options: makeOpts('fern')},
+              {id: '5', name: 'Gymnosperms', options: makeOpts('plant')},
+              {id: '6', name: 'Dicotyledons', options: makeOpts('plant')},
+              {id: '7', name: 'Monocotyledons', options: makeOpts('plant')},
             ],
           },
           {
             id: '8',
             name: 'Fungi',
+            options: {...makeOpts('fungi'), fontColor: '#D97706'},
           },
           {
             id: '9',
             name: 'Lichens',
+            options: {...makeOpts('lichen'), fontColor: '#0284C7'},
           },
           {
             id: '10',
             name: 'Animals',
+            options: {...makeOpts('animal'), fontColor: '#E11D48'},
             children: [
               {
                 id: '11',
                 name: 'Invertebrates',
-                category: 'Animals',
+                options: makeOpts('invertebrate'),
                 children: [
-                  {
-                    id: '12',
-                    name: 'Insects',
-                    category: 'Invertebrates',
-                  },
-                  {
-                    id: '13',
-                    name: 'Molluscs',
-                    category: 'Invertebrates',
-                  },
-                  {
-                    id: '14',
-                    name: 'Crustaceans',
-                    category: 'Invertebrates',
-                  },
-                  {
-                    id: '15',
-                    name: 'Others',
-                    category: 'Invertebrates',
-                  },
+                  {id: '12', name: 'Insects', options: makeOpts('insect')},
+                  {id: '13', name: 'Molluscs', options: makeOpts('mollusc')},
+                  {id: '14', name: 'Crustaceans', options: makeOpts('crustacean')},
+                  {id: '15', name: 'Others', options: makeOpts('invertebrate')},
                 ],
               },
               {
                 id: '16',
                 name: 'Vertebrates',
-                category: 'Animals',
+                options: makeOpts('vertebrate'),
                 children: [
-                  {
-                    id: '17',
-                    name: 'Fish',
-                    category: 'Vertebrates',
-                  },
-                  {
-                    id: '18',
-                    name: 'Amphibians',
-                    category: 'Vertebrates',
-                  },
-                  {
-                    id: '19',
-                    name: 'Reptiles',
-                    category: 'Vertebrates',
-                  },
-                  {
-                    id: '20',
-                    name: 'Birds',
-                    category: 'Vertebrates',
-                  },
-                  {
-                    id: '21',
-                    name: 'Mammals',
-                    category: 'Vertebrates',
-                  },
+                  {id: '17', name: 'Fish', options: makeOpts('fish')},
+                  {id: '18', name: 'Amphibians', options: makeOpts('amphibian')},
+                  {id: '19', name: 'Reptiles', options: makeOpts('reptile')},
+                  {id: '20', name: 'Birds', options: makeOpts('bird')},
+                  {id: '21', name: 'Mammals', options: makeOpts('mammal')},
                 ],
               },
             ],
           },
         ],
       };
+
       const options = {
         contentKey: 'name',
-        width: 1200,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 560,
         nodeWidth: 180,
         nodeHeight: 50,
         childrenSpacing: 180,
@@ -153,12 +141,12 @@
         fontSize: '20px',
         fontFamily: 'Quicksand, sans-serif',
         fontWeight: '600',
-        fontColor: '#388ac4',
+        fontColor: '#475569',
         borderColorHover: '#388ac4',
-        nodeBGColorHover: '#d7d7d7',
         enableToolbar: true,
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        canvasStyle: 'border: 1px solid #ddd; background: #fafafa; border-radius: 8px;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

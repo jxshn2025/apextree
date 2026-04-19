@@ -1,117 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Bottom to Top View - Career Ladder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 16px;
+      }
+    </style>
   </head>
   <body>
-    <div id="svg-tree" style="margin: 0 auto;"></div>
+    <p class="subtitle">
+      Bottom-to-top layout — juniors at the bottom grow upward toward leadership (<code>direction: 'bottom'</code>)
+    </p>
+    <div id="svg-tree"></div>
     <script>
-      const data = {
-        id: 'Lucas_Alex',
-        data: {
-          name: 'Lucas Alex',
-          imageURL: 'https://i.pravatar.cc/300?img=68',
-          borderColor: '#94ddff',
-        },
+      const levels = {
+        exec: {bg: '#1E293B', border: '#334155', text: '#F8FAFC', sub: '#94A3B8', tag: '#6366F1', tagText: '#fff'},
+        vp: {bg: '#1E3A5F', border: '#2563EB', text: '#F0F9FF', sub: '#93C5FD', tag: '#3B82F6', tagText: '#fff'},
+        senior: {bg: '#ECFDF5', border: '#34D399', text: '#065F46', sub: '#6EE7B7', tag: '#059669', tagText: '#fff'},
+        mid: {bg: '#F0FDF4', border: '#86EFAC', text: '#166534', sub: '#A7F3D0', tag: '#22C55E', tagText: '#fff'},
+        junior: {bg: '#F7FEE7', border: '#BEF264', text: '#3F6212', sub: '#D9F99D', tag: '#84CC16', tagText: '#fff'},
+      };
 
+      const makeOpts = (lv) => ({
+        nodeBGColor: levels[lv].bg,
+        nodeBGColorHover: levels[lv].bg,
+        borderColor: levels[lv].border,
+        borderColorHover: levels[lv].border,
+      });
+
+      const nodeTemplate = (c) => `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          height: 100%;
+          padding: 8px 14px;
+          box-sizing: border-box;
+        ">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-weight: 600; font-size: 13px; color: ${c.textColor}; line-height: 1.3;">${c.name}</div>
+            <span style="
+              font-size: 9px; font-weight: 600;
+              padding: 2px 7px; border-radius: 999px;
+              background: ${c.tagColor}; color: ${c.tagText};
+              white-space: nowrap;
+            ">${c.level}</span>
+          </div>
+          <div style="font-size: 10px; color: ${c.subColor}; margin-top: 3px;">${c.title}</div>
+        </div>`;
+
+      const data = {
+        id: 'ceo',
+        data: {
+          name: 'Victoria Sterling',
+          title: 'Chief Executive Officer',
+          level: 'C-Suite',
+          textColor: levels.exec.text,
+          subColor: levels.exec.sub,
+          tagColor: levels.exec.tag,
+          tagText: levels.exec.tagText,
+        },
+        options: makeOpts('exec'),
         children: [
           {
-            id: 'Alex_Lee',
+            id: 'vp_eng',
             data: {
-              name: 'Alex Lee',
-              imageURL: 'https://i.pravatar.cc/300?img=69',
-              borderColor: '#ffc7c2',
+              name: 'Marcus Webb',
+              title: 'VP of Engineering',
+              level: 'VP',
+              textColor: levels.vp.text,
+              subColor: levels.vp.sub,
+              tagColor: levels.vp.tag,
+              tagText: levels.vp.tagText,
             },
-
+            options: makeOpts('vp'),
             children: [
               {
-                id: 'Mia_Patel',
+                id: 'sr_1',
                 data: {
-                  name: 'Mia Patel',
-                  imageURL: 'https://i.pravatar.cc/300?img=49',
-                  borderColor: '#e3c2ff',
+                  name: 'Aisha Patel',
+                  title: 'Senior Engineer',
+                  level: 'Senior',
+                  textColor: levels.senior.text,
+                  subColor: levels.senior.sub,
+                  tagColor: levels.senior.tag,
+                  tagText: levels.senior.tagText,
                 },
+                options: makeOpts('senior'),
+                children: [
+                  {
+                    id: 'mid_1',
+                    data: {
+                      name: 'Leo Johansson',
+                      title: 'Software Engineer',
+                      level: 'Mid',
+                      textColor: levels.mid.text,
+                      subColor: levels.mid.sub,
+                      tagColor: levels.mid.tag,
+                      tagText: levels.mid.tagText,
+                    },
+                    options: makeOpts('mid'),
+                    children: [
+                      {
+                        id: 'jr_1',
+                        data: {
+                          name: 'Zara Kim',
+                          title: 'Junior Developer',
+                          level: 'Junior',
+                          textColor: levels.junior.text,
+                          subColor: levels.junior.sub,
+                          tagColor: levels.junior.tag,
+                          tagText: levels.junior.tagText,
+                        },
+                        options: makeOpts('junior'),
+                      },
+                      {
+                        id: 'jr_2',
+                        data: {
+                          name: "Finn O'Brien",
+                          title: 'Junior Developer',
+                          level: 'Junior',
+                          textColor: levels.junior.text,
+                          subColor: levels.junior.sub,
+                          tagColor: levels.junior.tag,
+                          tagText: levels.junior.tagText,
+                        },
+                        options: makeOpts('junior'),
+                      },
+                    ],
+                  },
+                ],
               },
               {
-                id: 'Ryan_Clark',
+                id: 'sr_2',
                 data: {
-                  name: 'Ryan Clark',
-                  imageURL: 'https://i.pravatar.cc/300?img=13',
-                  borderColor: '#e3c2ff',
+                  name: 'David Nakamura',
+                  title: 'Senior Engineer',
+                  level: 'Senior',
+                  textColor: levels.senior.text,
+                  subColor: levels.senior.sub,
+                  tagColor: levels.senior.tag,
+                  tagText: levels.senior.tagText,
                 },
-              },
-              {
-                id: 'Zoe_Wang',
-                data: {
-                  name: 'Zoe Wang',
-                  imageURL: 'https://i.pravatar.cc/300?img=54',
-                  borderColor: '#e3c2ff',
-                },
+                options: makeOpts('senior'),
+                children: [
+                  {
+                    id: 'mid_2',
+                    data: {
+                      name: 'Clara Mendes',
+                      title: 'Software Engineer',
+                      level: 'Mid',
+                      textColor: levels.mid.text,
+                      subColor: levels.mid.sub,
+                      tagColor: levels.mid.tag,
+                      tagText: levels.mid.tagText,
+                    },
+                    options: makeOpts('mid'),
+                  },
+                ],
               },
             ],
           },
           {
-            id: 'Leo_Kim',
+            id: 'vp_product',
             data: {
-              name: 'Leo Kim',
-              imageURL: 'https://i.pravatar.cc/300?img=43',
-              borderColor: '#ffc7c2',
+              name: 'Elena Vasquez',
+              title: 'VP of Product',
+              level: 'VP',
+              textColor: levels.vp.text,
+              subColor: levels.vp.sub,
+              tagColor: levels.vp.tag,
+              tagText: levels.vp.tagText,
             },
-
+            options: makeOpts('vp'),
             children: [
               {
-                id: 'Ava_Jones',
+                id: 'sr_pm',
                 data: {
-                  name: 'Ava Jones',
-                  imageURL: 'https://i.pravatar.cc/300?img=51',
-                  borderColor: '#d2edc5',
+                  name: 'Isaac Thompson',
+                  title: 'Senior Product Manager',
+                  level: 'Senior',
+                  textColor: levels.senior.text,
+                  subColor: levels.senior.sub,
+                  tagColor: levels.senior.tag,
+                  tagText: levels.senior.tagText,
                 },
-              },
-              {
-                id: 'Maya_Gupta',
-                data: {
-                  name: 'Maya Gupta',
-                  imageURL: 'https://i.pravatar.cc/300?img=45',
-                  borderColor: '#d2edc5',
-                },
+                options: makeOpts('senior'),
+                children: [
+                  {
+                    id: 'mid_pm',
+                    data: {
+                      name: 'Nia Okoye',
+                      title: 'Product Manager',
+                      level: 'Mid',
+                      textColor: levels.mid.text,
+                      subColor: levels.mid.sub,
+                      tagColor: levels.mid.tag,
+                      tagText: levels.mid.tagText,
+                    },
+                    options: makeOpts('mid'),
+                  },
+                ],
               },
             ],
-          },
-
-          {
-            id: 'Max_Ruiz',
-            data: {
-              name: 'Max Ruiz',
-              imageURL: 'https://i.pravatar.cc/300?img=50',
-              borderColor: '#ffc7c2',
-            },
           },
         ],
       };
+
       const options = {
         contentKey: 'data',
-        width: '90%',
-        height: 'auto',
-        nodeWidth: 150,
-        nodeHeight: 70,
-        childrenSpacing: 70,
-        siblingSpacing: 30,
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 620,
+        nodeWidth: 190,
+        nodeHeight: 56,
+        childrenSpacing: 60,
+        siblingSpacing: 18,
         direction: 'bottom',
-        nodeTemplate: (content) => {
-          return `<div style="display: flex; flex-direction: column; height: 100%;">
-                    <div style='display: flex;flex-direction: row;justify-content: space-between;align-items: center;height: 100%; box-shadow: 1px 2px 4px #ccc; padding: 0 7px;'>
-                      <img style='width: 50px;height: 50px;border-radius: 50%;' src='${content.imageURL}' alt='' />
-                      <div style="font-weight: bold; font-family: Arial; font-size: 14px">${content.name}</div>
-                    </div>
-                    <div style='margin-top: auto; border-bottom: 10px solid ${content.borderColor}'></div>
-                  </div>`;
-        },
-        nodeStyle: 'box-shadow: -3px -6px 8px -5px rgba(0,0,0,0.31);',
-        canvasStyle: 'border: 1px solid black;background: #f6f6f6;',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        edgeColor: '#86EFAC',
+        enableExpandCollapse: false,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #fafdf7;',
       };
+
       const tree = new ApexTree(document.getElementById('svg-tree'), options);
       tree.render(data);
     </script>

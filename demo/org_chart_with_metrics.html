@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - Org Chart with Performance Metrics</title>
+    <script src="../apextree.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #f0f2f5;
+        color: #1a1a2e;
+        min-height: 100vh;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        padding: 24px 32px 16px;
+        background: #ffffff;
+        border-bottom: 1px solid #e4e7ec;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: #475467;
+      }
+
+      #svg-tree {
+        margin: 24px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Org Chart with Performance Metrics</h1>
+      <p>Each card displays the employee's role and key performance indicators as progress bars.</p>
+    </div>
+
+    <div id="svg-tree"></div>
+
+    <script>
+      const data = {
+        id: 'md',
+        data: {
+          imageURL: 'https://i.pravatar.cc/300?img=68',
+          name: 'Devlin Cowins',
+          title: 'Managing director',
+          metrics: [
+            {label: 'Quality of work', value: 90},
+            {label: 'Initiative', value: 85},
+            {label: 'Cooperative', value: 95},
+          ],
+        },
+        children: [
+          {
+            id: 'sec',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=44',
+              name: 'Frasco Hatchell',
+              title: 'Secretary',
+              metrics: [
+                {label: 'Quality of work', value: 80},
+                {label: 'Initiative', value: 70},
+                {label: 'Cooperative', value: 85},
+              ],
+            },
+          },
+          {
+            id: 'smd',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=47',
+              name: 'Dorthea Duffit',
+              title: 'Sales and managing director',
+              metrics: [
+                {label: 'Quality of work', value: 88},
+                {label: 'Initiative', value: 92},
+                {label: 'Cooperative', value: 78},
+              ],
+            },
+            children: [
+              {
+                id: 'fm',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=26',
+                  name: 'Dorothee Weavers',
+                  title: 'Factory manager',
+                  metrics: [
+                    {label: 'Quality of work', value: 82},
+                    {label: 'Initiative', value: 75},
+                    {label: 'Cooperative', value: 90},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            id: 'pd',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=15',
+              name: 'Stanislas Pickernall',
+              title: 'Production director',
+              metrics: [
+                {label: 'Quality of work', value: 85},
+                {label: 'Initiative', value: 90},
+                {label: 'Cooperative', value: 82},
+              ],
+            },
+            children: [
+              {
+                id: 'qcm',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=60',
+                  name: 'Jaime Loughlan',
+                  title: 'Quality control manager',
+                  metrics: [
+                    {label: 'Quality of work', value: 95},
+                    {label: 'Initiative', value: 80},
+                    {label: 'Cooperative', value: 88},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            id: 'hrd',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=32',
+              name: 'Rachel Steinhammer',
+              title: 'Human resources director',
+              metrics: [
+                {label: 'Quality of work', value: 78},
+                {label: 'Initiative', value: 88},
+                {label: 'Cooperative', value: 92},
+              ],
+            },
+            children: [
+              {
+                id: 'ma',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=52',
+                  name: 'Bell Finden',
+                  title: 'Management accountant',
+                  metrics: [
+                    {label: 'Quality of work', value: 86},
+                    {label: 'Initiative', value: 74},
+                    {label: 'Cooperative', value: 80},
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            id: 'fd',
+            data: {
+              imageURL: 'https://i.pravatar.cc/300?img=36',
+              name: 'Coreen Ambroix',
+              title: 'Finance director',
+              metrics: [
+                {label: 'Quality of work', value: 92},
+                {label: 'Initiative', value: 86},
+                {label: 'Cooperative', value: 80},
+              ],
+            },
+            children: [
+              {
+                id: 'fa',
+                data: {
+                  imageURL: 'https://i.pravatar.cc/300?img=25',
+                  name: 'Cobbie Gentil',
+                  title: 'Financial accountant',
+                  metrics: [
+                    {label: 'Quality of work', value: 80},
+                    {label: 'Initiative', value: 70},
+                    {label: 'Cooperative', value: 85},
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        contentKey: 'data',
+        width: '100%',
+        viewPortWidth: 1200,
+        viewPortHeight: 700,
+        nodeWidth: 180,
+        nodeHeight: 190,
+        childrenSpacing: 60,
+        siblingSpacing: 20,
+        direction: 'top',
+        edgeStyle: 'curved',
+        borderRadius: '12px',
+        borderColor: '#e0e0e0',
+        borderWidth: 1,
+        nodeBGColor: '#ffffff',
+        nodeShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        nodeShadowHover: '0 4px 16px rgba(0,0,0,0.13)',
+        enableToolbar: true,
+        enableExpandCollapse: true,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+        nodeTemplate: (content) => {
+          const metricsHtml = content.metrics
+            .map(
+              (m) => `
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                <span style="font-size:9px;color:#555;width:84px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">• ${m.label}</span>
+                <div style="flex:1;height:5px;background:#e8e8e8;border-radius:3px;overflow:hidden;">
+                  <div style="width:${m.value}%;height:100%;background:${m.value >= 90 ? '#4caf50' : m.value >= 80 ? '#8bc34a' : m.value >= 70 ? '#ffc107' : '#ff9800'};border-radius:3px;"></div>
+                </div>
+              </div>`
+            )
+            .join('');
+
+          return `
+            <div style="display:flex;flex-direction:column;align-items:center;height:100%;padding:12px 10px 10px;text-align:center;">
+              <img src="${content.imageURL}" alt=""
+                style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid #e8e8e8;margin-bottom:6px;" />
+              <div style="font-weight:700;font-size:12px;line-height:1.3;color:#1a1a2e;margin-bottom:2px;">${content.name}</div>
+              <div style="font-size:10px;color:#666;font-weight:500;margin-bottom:8px;">${content.title}</div>
+              <div style="width:100%;padding:0 2px;">
+                ${metricsHtml}
+              </div>
+            </div>`;
+        },
+      };
+
+      const container = document.getElementById('svg-tree');
+      const tree = new ApexTree(container, options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

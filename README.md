@@ -72,6 +72,8 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | `contentKey` | `string` | `'name'` | Key in the data object used as the node display label. Set to `'data'` to pass a structured object to `nodeTemplate`. |
 | `siblingSpacing` | `number` | `50` | Horizontal distance between sibling nodes in pixels. |
 | `childrenSpacing` | `number` | `50` | Vertical distance between a parent node and its children in pixels. |
+| `paddingX` | `number` | `100` | Horizontal padding around the rendered tree, in pixels. Adds breathing room between the leftmost/rightmost nodes (and any external labels that extend past them) and the SVG viewBox edge. |
+| `paddingY` | `number` | `100` | Vertical padding around the rendered tree, in pixels. Useful when leaf nodes have rotated `externalLabel` content that extends past the marker bounds. |
 | `canvasStyle` | `string` | `''` | Arbitrary CSS injected onto the SVG root container element. |
 | `containerClassName` | `string` | `'root'` | CSS class name for the root SVG container element. |
 | `theme` | `'light' \| 'dark' \| 'custom'` | `'light'` | Built-in theme preset. `'dark'` uses slate backgrounds for dark-mode apps. `'custom'` disables built-in CSS variable injection so host-page variables take precedence. |
@@ -83,8 +85,10 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | `highlightOnHover` | `boolean` | `true` | Highlight the hovered node and its connecting edges. |
 | `enableAnimation` | `boolean` | `true` | Animate node expansion/collapse transitions. |
 | `enableExpandCollapse` | `boolean` | `true` | Show expand/collapse buttons on nodes that have children. |
+| `expandCollapseOnNodeClick` | `boolean` | `false` | When `true`, clicking anywhere on a node with children toggles its expansion — the node body itself acts as the trigger. Useful for marker-style trees where the dedicated `+`/`-` button is hidden. The toggle fires before `onNodeClick`. The cursor becomes a pointer on clickable nodes. |
 | `enableExpandCollapseZoom` | `boolean` | `true` | Re-fit the viewBox to the new tree bounds on collapse/expand. Set to `false` to keep the viewBox fixed. |
 | `enableToolbar` | `boolean` | `false` | Show the zoom/pan toolbar. |
+| `enableZoomPan` | `boolean` | `true` | Enable mouse-wheel zoom and drag-to-pan on the canvas. Set to `false` to lock the viewport. |
 | `enableSearch` | `boolean` | `false` | Show a search input in the toolbar. Filters nodes by label, highlights matches, and centers on the first match on Enter. |
 | `enableSelection` | `'single' \| 'multi' \| false` | `false` | Node selection mode. `'single'` allows one selected node at a time. `'multi'` allows toggling multiple nodes. Selected nodes get `aria-selected="true"` and a visible ring. |
 | `enableBreadcrumb` | `boolean` | `false` | Show a breadcrumb trail above the chart. Updates on node click to show the path from root to the selected node. |
@@ -110,6 +114,26 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | `borderRadius` | `string` | `'10px'` | CSS border-radius for nodes. |
 | `borderColor` | `string` | `'#E4E7EC'` | Border color of nodes in their default state. |
 | `borderColorHover` | `string` | `'#5C6BC0'` | Border color of nodes on hover. |
+| `externalLabel` | `ExternalLabelOptions` | `{ enabled: false }` | Render the node's label outside its bounds (above/below/beside the node) instead of inside the `nodeTemplate`. See [External Labels](#external-labels). |
+
+### External Labels
+
+When `externalLabel.enabled` is `true`, the node's resolved content (the value at `contentKey`, falling back to `name` for object content) is rendered as an SVG `<text>` element positioned relative to the node, instead of inside the in-node template. The node box itself still renders, so combining a small `nodeWidth`/`nodeHeight` with `borderRadius: '50%'` produces a circular marker with a floating label — useful for treegraph-style charts where labels sit above, beside, or below the marker.
+
+External labels can be configured globally via the top-level `externalLabel` option, or per-node via `NestedNode.options.externalLabel`. Per-node values are layered onto the global ones.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `externalLabel.enabled` | `boolean` | `false` | Render the label outside the node bounds. When `false`, the in-node `nodeTemplate` is used as before. |
+| `externalLabel.align` | `'left' \| 'center' \| 'right'` | `'center'` | Horizontal placement of the label relative to the node. `'left'` places it to the left, `'right'` to the right. |
+| `externalLabel.verticalAlign` | `'top' \| 'middle' \| 'bottom'` | `'middle'` | Vertical placement of the label relative to the node. `'top'` places it above the node, `'bottom'` below. |
+| `externalLabel.offsetX` | `number` | `0` | Additional horizontal pixel offset applied after `align`. |
+| `externalLabel.offsetY` | `number` | `0` | Additional vertical pixel offset applied after `verticalAlign`. |
+| `externalLabel.rotation` | `number` | `0` | Rotation in degrees applied around the label anchor. Use `90` for vertical leaf labels. |
+| `externalLabel.fontColor` | `string` | inherits `fontColor` | Override the global font color for the external label. |
+| `externalLabel.fontFamily` | `string` | inherits `fontFamily` | Override the global font family for the external label. |
+| `externalLabel.fontSize` | `string` | inherits `fontSize` | Override the global font size for the external label. |
+| `externalLabel.fontWeight` | `string` | inherits `fontWeight` | Override the global font weight for the external label. |
 
 ### Edge (Connector) Styling
 

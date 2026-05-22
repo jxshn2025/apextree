@@ -195,12 +195,33 @@ export declare interface CommonOptions {
     readonly enableSelection: TreeSelectionMode;
     /** Show the zoom/pan toolbar. @default false */
     readonly enableToolbar: boolean;
+    /**
+     * Enable mouse-wheel zoom and drag-to-pan on the canvas. Set to `false` to
+     * lock the viewport (useful when embedding the chart inside a scrollable page).
+     * @default true
+     */
+    readonly enableZoomPan: boolean;
     /** Stack leaf nodes vertically instead of spreading them horizontally. @default false */
     readonly groupLeafNodes: boolean;
     /** Height of the canvas. Use `'auto'` to size to content. @default 'auto' */
     readonly height: number | string;
     /** Highlight the hovered node and its connecting edges. @default true */
     readonly highlightOnHover: boolean;
+    /**
+     * Horizontal padding around the rendered tree, in pixels. Adds breathing
+     * room between the leftmost/rightmost nodes (and any external labels that
+     * extend past them) and the SVG viewBox edge.
+     * @default 100
+     */
+    readonly paddingX: number;
+    /**
+     * Vertical padding around the rendered tree, in pixels. Adds breathing
+     * room above the root and below the deepest leaves — useful when leaf
+     * nodes have rotated `externalLabel` content that extends past the
+     * marker bounds.
+     * @default 100
+     */
+    readonly paddingY: number;
     /** Horizontal distance between sibling nodes in pixels. @default 50 */
     readonly siblingSpacing: number;
     /**
@@ -269,6 +290,70 @@ export declare interface EdgeOptions {
  * because its purpose is to visually stack siblings).
  */
 export declare type EdgeStyle = 'curved' | 'orthogonal' | 'straight';
+
+/**
+ * Options for an external label rendered outside the node bounds.
+ *
+ * When `enabled` is true, the node's resolved content (the value at
+ * `contentKey`) is rendered as an SVG `<text>` element positioned relative
+ * to the node, instead of inside the node card. This is what enables looks
+ * like the Highcharts "inverted treegraph" — small marker nodes with their
+ * labels floating above, beside, or below the marker, optionally rotated.
+ *
+ * The in-node `nodeTemplate` is suppressed for any node where
+ * `externalLabel.enabled` resolves to `true`. The node box itself still
+ * renders (background, border, border-radius), so combine with a small
+ * `nodeWidth` / `nodeHeight` and `borderRadius: '50%'` to get a circular
+ * marker look.
+ *
+ * Defaults to `enabled: false` — existing integrations are unaffected.
+ */
+export declare interface ExternalLabelOptions {
+    /**
+     * Horizontal placement of the label relative to the node.
+     *
+     * - `'left'`   — label sits to the left of the node (text is right-anchored)
+     * - `'center'` — label is centered on the node horizontally (default)
+     * - `'right'`  — label sits to the right of the node (text is left-anchored)
+     *
+     * @default 'center'
+     */
+    readonly align?: 'center' | 'left' | 'right';
+    /**
+     * Render the node's label outside the node bounds. When `false` (default),
+     * the in-node `nodeTemplate` is used as before.
+     * @default false
+     */
+    readonly enabled: boolean;
+    /** Override the global `fontColor` for the external label only. */
+    readonly fontColor?: string;
+    /** Override the global `fontFamily` for the external label only. */
+    readonly fontFamily?: string;
+    /** Override the global `fontSize` for the external label only. */
+    readonly fontSize?: string;
+    /** Override the global `fontWeight` for the external label only. */
+    readonly fontWeight?: string;
+    /** Additional horizontal pixel offset applied after `align`. @default 0 */
+    readonly offsetX?: number;
+    /** Additional vertical pixel offset applied after `verticalAlign`. @default 0 */
+    readonly offsetY?: number;
+    /**
+     * Rotation in degrees, applied around the label anchor. Use `90` for vertical
+     * leaf labels (reading top-to-bottom) and `-90` for bottom-to-top text.
+     * @default 0
+     */
+    readonly rotation?: number;
+    /**
+     * Vertical placement of the label relative to the node.
+     *
+     * - `'top'`    — label sits above the node (text is bottom-anchored)
+     * - `'middle'` — label is centered on the node vertically (default)
+     * - `'bottom'` — label sits below the node (text is top-anchored)
+     *
+     * @default 'middle'
+     */
+    readonly verticalAlign?: 'bottom' | 'middle' | 'top';
+}
 
 /**
  * Typography options applied to the text rendered inside each node.
@@ -505,10 +590,35 @@ export declare interface NodeOptions {
     readonly collapseBadgeThreshold: number;
     /** Show expand/collapse buttons on nodes that have children. @default true */
     readonly enableExpandCollapse: boolean;
+    /**
+     * When `true`, clicking anywhere on a node with children (or with
+     * collapsed `hiddenChildren`) toggles its expansion — making the node
+     * body itself act as the expand/collapse trigger. The cursor becomes a
+     * pointer on these nodes to signal clickability.
+     *
+     * Works alongside `enableExpandCollapse` (the dedicated `+`/`-` button)
+     * and `onNodeClick` (which fires after the toggle so the user callback
+     * sees the post-toggle node state).
+     *
+     * @default false
+     */
+    readonly expandCollapseOnNodeClick: boolean;
     /** Background color of the expand/collapse button. @default '#FFFFFF' */
     readonly expandCollapseButtonBGColor: string;
     /** Border color of the expand/collapse button. @default '#BCBCBC' */
     readonly expandCollapseButtonBorderColor: string;
+    /**
+     * Render the node's label outside its bounds (above/below/beside the node)
+     * instead of inside the `nodeTemplate`. See {@link ExternalLabelOptions}.
+     *
+     * When `enabled`, the in-node template is suppressed for that node and
+     * the label is drawn as an SVG `<text>` element with optional offset
+     * and rotation. Useful for marker-style nodes (small circles) with
+     * floating labels.
+     *
+     * @default { enabled: false }
+     */
+    readonly externalLabel: ExternalLabelOptions;
     /** Spacing between stacked leaf nodes when `groupLeafNodes` is true, in pixels. @default 10 */
     readonly groupLeafNodesSpacing: number;
     /** Default background color of nodes. @default '#FFFFFF' */
@@ -587,7 +697,7 @@ declare class Paper {
     private readonly width;
     private readonly containerElement;
     canvas: SvgCanvas;
-    constructor(element: HTMLElement, width: number, height: number, canvasStyle: string, chartContext: ChartContext);
+    constructor(element: HTMLElement, width: number, height: number, canvasStyle: string, chartContext: ChartContext, enableZoomPan?: boolean);
     static drawCircle(attributes?: CircleAttr): Circle;
     static drawGroup(x?: number, y?: number, id?: string, parent?: string): G;
     static drawPath(pathString: string, { borderColor, id }?: {

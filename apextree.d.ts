@@ -700,6 +700,18 @@ declare class Paper {
     constructor(element: HTMLElement, width: number, height: number, canvasStyle: string, chartContext: ChartContext, enableZoomPan?: boolean);
     static drawCircle(attributes?: CircleAttr): Circle;
     static drawGroup(x?: number, y?: number, id?: string, parent?: string): G;
+    /**
+     * Create the per-node `<g data-self>` wrapper. Unlike `drawGroup`, this
+     * carries NO `transform` attribute — node positioning is split between the
+     * child `<foreignObject>`'s `x`/`y` attributes (which Safari honors) and the
+     * sibling `<g class="apextree-node-svg">` decorations container's own
+     * transform. Putting the translate on the wrapper triggers a Safari paint
+     * bug where any foreignObject descendant with `position:relative` collapses
+     * to the SVG canvas origin (see WEBKIT_NOTE in NodeRenderer). The absolute
+     * (X, Y) is stored as `data-x`/`data-y` so the slide animation can recover
+     * it without parsing transforms.
+     */
+    static drawNodeWrapper(x: number, y: number, id?: string, parent?: string): G;
     static drawPath(pathString: string, { borderColor, id }?: {
         borderColor?: string | undefined;
         id?: string | undefined;

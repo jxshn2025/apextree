@@ -244,6 +244,8 @@ const options = {
 };
 ```
 
+**Safari compatibility:** When the SVG viewBox is scaled (e.g. `width: '100%'`), Safari can mis-paint foreignObject descendants that create a new compositing layer. Inside a `nodeTemplate`, prefer flex/grid layout and DOM order for stacking. Avoid `position: relative`/`absolute`, `opacity < 1`, and CSS `transform` on the template's elements; use `color` with alpha and rely on flex/grid placement instead. Chromium and Firefox are unaffected.
+
 ## Per-Node Options
 
 Individual nodes can override global styling via an `options` object. This accepts the same node, font, and tooltip options as the global configuration:
@@ -366,6 +368,12 @@ The `tree.render(data)` call returns a `graph` instance with the following publi
 | Method                          | Description                                                               |
 | ------------------------------- | ------------------------------------------------------------------------- |
 | `setBreadcrumbHandler(handler)` | Register a callback for breadcrumb segment clicks. Pass `null` to remove. |
+
+### Keyboard Shortcuts
+
+| Method | Description |
+| --- | --- |
+| `setKeyboardShortcutHandlers(handlers)` | Wire up callbacks for keyboard shortcuts that operate outside the tree itself — typically used to focus or clear an external search input. `handlers` is `{ onFocusSearch?: () => void, onClearSearch?: () => void }`. Handlers persist across `render()` calls until replaced. |
 
 ### Export
 

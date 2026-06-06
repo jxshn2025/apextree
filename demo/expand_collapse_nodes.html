@@ -25,7 +25,7 @@
       }
       .subtitle {
         font-size: 13px;
-        color: #888;
+        color: #6e6e6e;
         margin-bottom: 16px;
       }
     </style>
@@ -52,41 +52,44 @@
         nodeShadow: 'none',
       });
 
+      // CSS grid lets the avatar overlap the card without `position:relative`,
+      // which Safari mis-paints when a foreignObject ancestor's SVG viewBox is
+      // scaled. Avatar comes AFTER the card in DOM so it paints on top.
       const nodeTemplate = (c) => `
         <div style="
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+          display: grid;
+          grid-template-columns: 1fr;
+          grid-template-rows: 26px 1fr;
           height: 100%;
           box-sizing: border-box;
           text-align: center;
+          justify-items: center;
           padding: 0 4px 4px;
         ">
-          <img src="${c.img}" alt=""
-            style="
-              width: 48px; height: 48px;
-              border-radius: 50%;
-              object-fit: cover;
-              flex-shrink: 0;
-              border: 3px solid ${c.accent};
-              position: relative;
-              z-index: 1;
-              background: #fff;
-            " />
           <div style="
+            grid-row: 2 / 3;
+            grid-column: 1;
+            align-self: stretch;
             background: ${c.bg};
             border: 1px solid ${c.border};
             border-radius: 8px;
-            margin-top: -26px;
             padding: 32px 8px 10px;
-            width: 100%;
             box-sizing: border-box;
-            flex: 1;
           ">
             <div style="font-weight: 600; font-size: 11px; color: #0f172a; line-height: 1.3;">${c.name}</div>
             <div style="font-size: 9px; color: #64748b; margin-top: 2px;">${c.title}</div>
             <div style="font-size: 8px; color: ${c.accent}; margin-top: 2px; font-weight: 500;">${c.dept}</div>
           </div>
+          <img src="${c.img}" alt=""
+            style="
+              grid-row: 1;
+              grid-column: 1;
+              width: 48px; height: 48px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 3px solid ${c.accent};
+              background: #fff;
+            " />
         </div>`;
 
       const data = {

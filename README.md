@@ -88,7 +88,7 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | `expandCollapseOnNodeClick` | `boolean` | `false` | When `true`, clicking anywhere on a node with children toggles its expansion — the node body itself acts as the trigger. Useful for marker-style trees where the dedicated `+`/`-` button is hidden. The toggle fires before `onNodeClick`. The cursor becomes a pointer on clickable nodes. |
 | `enableExpandCollapseZoom` | `boolean` | `true` | Re-fit the viewBox to the new tree bounds on collapse/expand. Set to `false` to keep the viewBox fixed. |
 | `enableToolbar` | `boolean` | `false` | Show the zoom/pan toolbar. |
-| `enableZoomPan` | `boolean` | `true` | Enable mouse-wheel zoom and drag-to-pan on the canvas. Set to `false` to lock the viewport. |
+| `enableZoomPan` | `boolean` | `true` | Enable Ctrl/⌘ + mouse-wheel (or trackpad pinch) zoom and drag-to-pan on the canvas. A plain wheel still scrolls the page. Set to `false` to lock the viewport. |
 | `enableSearch` | `boolean` | `false` | Show a search input in the toolbar. Filters nodes by label, highlights matches, and centers on the first match on Enter. |
 | `enableSelection` | `'single' \| 'multi' \| false` | `false` | Node selection mode. `'single'` allows one selected node at a time. `'multi'` allows toggling multiple nodes. Selected nodes get `aria-selected="true"` and a visible ring. |
 | `enableBreadcrumb` | `boolean` | `false` | Show a breadcrumb trail above the chart. Updates on node click to show the path from root to the selected node. |
@@ -102,7 +102,8 @@ The layout can be configured by passing a second argument to `ApexTree` with the
 | --- | --- | --- | --- |
 | `nodeWidth` | `number` | `50` | Width of each node in pixels. |
 | `nodeHeight` | `number` | `30` | Height of each node in pixels. |
-| `nodeTemplate` | `(content: unknown) => string` | built-in | Custom function returning an HTML string rendered inside each node. Receives the value at `contentKey`. |
+| `nodeTemplate` | `(content, context?) => string` | built-in | Custom function returning an HTML string rendered inside each node. Receives the value at `contentKey` plus a `NodeTemplateContext` (`{ direction, cardImagePosition }`). |
+| `cardImagePosition` | `'left' \| 'top'` | `'left'` | Avatar placement in the built-in org-card. `'top'` centers the avatar above the text (and below it for `direction: 'bottom'`, so it faces the parent). |
 | `nodeClassName` | `string` | `'apextree-node'` | CSS class name added to every node element. |
 | `nodeStyle` | `string` | `''` | Inline CSS string applied to each node element. |
 | `nodeBGColor` | `string` | `'#FFFFFF'` | Default background color of nodes. |
@@ -202,7 +203,9 @@ const defaultNodeTemplate = (content) => {
 
 ### Built-in org-chart card
 
-When `contentKey` is set to `'data'` and the data object contains any of `imageURL`, `title`, `subtitle`, `badge`, or `accentColor`, the built-in template automatically renders a structured org-chart card with avatar, name, title, subtitle, optional badge, and optional accent stripe — no custom `nodeTemplate` needed.
+When `contentKey` is set to `'data'` and the data object contains any of `imageURL`, `title`, `subtitle`, `badge`, `accentColor`, or `meta`, the built-in template automatically renders a structured org-chart card — no custom `nodeTemplate` needed.
+
+The card supports two layouts via the `cardImagePosition` option: `'left'` (default — avatar beside the text) and `'top'` (avatar centered above the text, or below for `direction: 'bottom'`, with `accentColor` applied as the avatar ring). Optional `meta` rows render icon + label lines under the title/subtitle.
 
 ```js
 const data = {
@@ -215,6 +218,8 @@ const data = {
     imageURL: 'https://example.com/avatar.jpg',
     accentColor: '#6366f1',
     badge: {text: 'Active', color: '#EEF2FF'},
+    // Optional icon + label rows (icon is any icon-font class, or omit it):
+    meta: [{icon: 'bi bi-geo-alt', label: 'San Francisco'}, {label: 'Joined 2019'}],
   },
   children: [],
 };
@@ -223,6 +228,7 @@ const options = {
   contentKey: 'data',
   nodeWidth: 200,
   nodeHeight: 80,
+  cardImagePosition: 'top', // avatar centered above the text
 };
 ```
 
@@ -244,7 +250,16 @@ const options = {
 };
 ```
 
-**Safari compatibility:** When the SVG viewBox is scaled (e.g. `width: '100%'`), Safari can mis-paint foreignObject descendants that create a new compositing layer. Inside a `nodeTemplate`, prefer flex/grid layout and DOM order for stacking. Avoid `position: relative`/`absolute`, `opacity < 1`, and CSS `transform` on the template's elements; use `color` with alpha and rely on flex/grid placement instead. Chromium and Firefox are unaffected.
+**Safari compatibility:** ApexTree renders each node's HTML inside an SVG `<foreignObject>`. When the SVG viewBox is scaled — `width: '100%'`, any zoom level, or mobile fit-to-viewport (which is always scaled) — Safari/WebKit mis-paints any foreignObject descendant that gets its own paint layer or stacking context: the card renders blank, or its content collapses to the canvas origin. Chromium and Firefox are unaffected, so the bug is invisible until a user opens Safari.
+
+Inside a `nodeTemplate`, avoid every property that creates a paint layer or stacking context:
+
+- `position: relative` / `absolute` / `fixed` / `sticky`
+- `opacity` less than `1`
+- `transform`, `filter`
+- `z-index`, `will-change`, `mix-blend-mode`, `isolation: isolate`
+
+Use plain flow with flex/grid layout and DOM order for stacking instead. Dim text with `color` (e.g. `rgba(...)` or `color-mix(...)`), not `opacity`. Overlap an avatar on the card edge with a negative margin rather than `position: absolute`. In development, ApexTree inspects your template and logs a one-time `console.warn` naming any offending property so you can spot this without testing in Safari.
 
 ## Per-Node Options
 

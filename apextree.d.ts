@@ -196,8 +196,10 @@ export declare interface CommonOptions {
     /** Show the zoom/pan toolbar. @default false */
     readonly enableToolbar: boolean;
     /**
-     * Enable mouse-wheel zoom and drag-to-pan on the canvas. Set to `false` to
-     * lock the viewport (useful when embedding the chart inside a scrollable page).
+     * Enable Ctrl/⌘ + mouse-wheel (or trackpad pinch) zoom and drag-to-pan on the
+     * canvas. A plain wheel without a modifier still scrolls the page. Set to
+     * `false` to lock the viewport (useful when embedding the chart inside a
+     * scrollable page).
      * @default true
      */
     readonly enableZoomPan: boolean;
@@ -578,6 +580,13 @@ export declare interface NodeOptions {
     readonly borderStyle: string;
     /** Border width of nodes in pixels. @default 1 */
     readonly borderWidth: number;
+    /**
+     * Where the built-in org-card places the avatar: `'left'` (avatar beside the
+     * text) or `'top'` (avatar centered above the text — below it for
+     * `direction: 'bottom'`, so it sits on the parent-facing edge). Custom
+     * `nodeTemplate`s receive this via {@link NodeTemplateContext}. @default 'left'
+     */
+    readonly cardImagePosition: 'left' | 'top';
     /** Background color of the collapse-count badge. @default '#5C6BC0' */
     readonly collapseBadgeBGColor: string;
     /** Show the collapse-count badge on collapsed nodes. @default true */
@@ -647,12 +656,38 @@ export declare interface NodeOptions {
      * Custom function returning an HTML string rendered inside each node.
      * Receives the value at `contentKey` on the node data — typically a string,
      * but may be any shape when `contentKey` points at a nested object.
+     *
+     * The HTML is rendered inside an SVG `<foreignObject>`. To stay correct in
+     * Safari under a scaled viewBox, avoid CSS that creates a paint layer or
+     * stacking context on the template's elements: `position`
+     * (relative/absolute/fixed/sticky), `opacity` < 1, `transform`, `filter`,
+     * `z-index`, `will-change`, `mix-blend-mode`, `isolation: isolate`. Use
+     * flex/grid layout with DOM order and `color`-based dimming instead. ApexTree
+     * logs a one-time `console.warn` if a template trips this. See the "Custom
+     * template" section of the README.
+     *
+     * A second `context` argument ({@link NodeTemplateContext}) carries the tree
+     * `direction` and resolved `cardImagePosition`, so templates can adapt their
+     * layout without reading globals.
      */
-    readonly nodeTemplate: (content: unknown) => string;
+    readonly nodeTemplate: (content: unknown, context?: NodeTemplateContext) => string;
     /** Width of each node in pixels. @default 50 */
     readonly nodeWidth: number;
     /** Callback fired when the user clicks a node. Receives the raw node data object. */
     readonly onNodeClick?: (node: unknown) => void;
+}
+
+/**
+ * Context passed as the second argument to a `nodeTemplate`, so templates can
+ * adapt to layout-level settings without reading globals. The built-in card
+ * uses it to honour `cardImagePosition` and to place the avatar on the
+ * parent-facing edge per `direction`. Custom templates may ignore it.
+ */
+export declare interface NodeTemplateContext {
+    /** Where the built-in card renders the avatar. Mirrors the `cardImagePosition` option. */
+    readonly cardImagePosition: 'left' | 'top';
+    /** The tree's growth direction. */
+    readonly direction: TreeDirection;
 }
 
 /**
@@ -681,13 +716,22 @@ export declare interface OrgNodeData {
         color?: string;
         text: string;
     };
-    /** Avatar URL rendered as a 40×40 circular image on the left of the card. */
+    /** Avatar URL rendered as a circular image on the card (40px left layout, 48px top layout). */
     readonly imageURL?: string;
+    /**
+     * Extra metadata rows rendered under the title/subtitle as icon + label
+     * lines. `icon` is an optional CSS class for an icon font (e.g. Bootstrap
+     * Icons `'bi bi-person'`); omit it for a plain text row.
+     */
+    readonly meta?: ReadonlyArray<{
+        icon?: string;
+        label: string;
+    }>;
     /** Primary display label. Equivalent to the top-level `NestedNode.name`. */
     readonly name?: string;
     /** Third line — typically a department or team. Smaller / lower contrast. */
     readonly subtitle?: string;
-    /** Second line — typically a job title. Medium size, lower opacity. */
+    /** Second line — typically a job title. Medium size, lower contrast. */
     readonly title?: string;
 }
 

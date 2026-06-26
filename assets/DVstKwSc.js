@@ -1,0 +1,1 @@
+import{Ji as e,ha as t,r as n}from"./index-Bhhsut7K.js";import{t as r}from"./ChiJXsfH.js";var i={};function a(n,r){return t(),e(`div`,null,` Not Found `)}typeof r==`function`&&r(i);var o=n(i,[[`render`,a]]);export{o as default};

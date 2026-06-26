@@ -1,0 +1,1 @@
+import{t as e}from"./CKI5BRlJ.js";import{$i as t,Aa as n,Ki as r,Zi as i,ha as a}from"./index-Bhhsut7K.js";import{t as o}from"./ChiJXsfH.js";import{t as s}from"./CU-KA-CC.js";var c=t({__name:`register`,setup(t){return(t,o)=>{let c=s;return a(),r(e,{title:`注册`},{default:n(()=>[i(c)]),_:1})}}});typeof o==`function`&&o(c);var l=c;export{l as default};

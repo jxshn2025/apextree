@@ -1,0 +1,1 @@
+import{$i as e,Ji as t,O as n,Oa as r,ft as i,ha as a}from"./index-Bhhsut7K.js";var o={class:`h-full flex items-center justify-center`},s=e({__name:`index`,setup(e){let s=n();return r(i,e=>{e.length!==0&&s.replace(e[0].path)},{immediate:!0}),(e,n)=>(a(),t(`div`,o,`请稍后...`))}});export{s as default};

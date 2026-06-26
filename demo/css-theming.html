@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTree - CSS Custom Property Theming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="../apextree.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #f0f4f8;
+        color: #1a202c;
+        min-height: 100vh;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      body[data-theme='dark'] {
+        background: #0d1117;
+        color: #e0e0e0;
+      }
+
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px;
+        background: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s;
+      }
+
+      body[data-theme='dark'] .page-header {
+        background: #161b22;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      .page-header h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .page-header h1 span {
+        color: #5c6bc0;
+      }
+
+      .theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 8px 16px;
+        border: 1.5px solid #cbd5e0;
+        border-radius: 8px;
+        background: transparent;
+        font: inherit;
+        font-size: 0.9rem;
+        color: inherit;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(92, 107, 192, 0.1);
+        border-color: #5c6bc0;
+      }
+
+      .content {
+        max-width: 1000px;
+        margin: 32px auto;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .demo-section {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition:
+          background 0.3s,
+          box-shadow 0.3s;
+      }
+
+      body[data-theme='dark'] .demo-section {
+        background: #161b22;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      .demo-section h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .demo-section p {
+        font-size: 0.875rem;
+        color: #718096;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      body[data-theme='dark'] .demo-section p {
+        color: #8b9cbf;
+      }
+
+      .chart-wrapper {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: border-color 0.3s;
+      }
+
+      body[data-theme='dark'] .chart-wrapper {
+        border-color: #30363d;
+      }
+
+      code {
+        font-family: 'Fira Code', 'Cascadia Code', monospace;
+        font-size: 0.8rem;
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 14px 18px;
+        display: block;
+        overflow-x: auto;
+        line-height: 1.7;
+        white-space: pre;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+
+      body[data-theme='dark'] code {
+        background: #0d1117;
+        border-color: #30363d;
+        color: #c9d1d9;
+      }
+
+      .token-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .token-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+
+      body[data-theme='dark'] .token-item {
+        background: #1c2128;
+        border-color: #30363d;
+        color: #c9d1d9;
+      }
+
+      .token-swatch {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+      }
+
+      .token-name {
+        font-family: monospace;
+        color: #5c6bc0;
+        font-size: 0.75rem;
+      }
+
+      body[data-theme='dark'] .token-name {
+        color: #7986cb;
+      }
+
+      /* ── CSS Custom Property Theming tokens ─────────────────────── */
+      #tree-light {
+        --apex-tree-node-bg: #ffffff;
+        --apex-tree-node-bg-hover: #f0f4ff;
+        --apex-tree-node-border: #cbd5e0;
+        --apex-tree-node-border-hover: #5c6bc0;
+        --apex-tree-node-border-radius: 8px;
+        --apex-tree-edge-stroke: #a0aec0;
+        --apex-tree-edge-stroke-hover: #5c6bc0;
+        --apex-tree-font-family: 'Inter', sans-serif;
+        --apex-tree-font-size: 13px;
+        --apex-tree-font-color: #2d3748;
+        --apex-tree-expand-btn-bg: #ffffff;
+        --apex-tree-expand-btn-border: #cbd5e0;
+      }
+
+      #tree-dark {
+        --apex-tree-node-bg: #1e2433;
+        --apex-tree-node-bg-hover: #2a3349;
+        --apex-tree-node-border: #3d4f6e;
+        --apex-tree-node-border-hover: #7986cb;
+        --apex-tree-node-border-radius: 8px;
+        --apex-tree-edge-stroke: #3d4f6e;
+        --apex-tree-edge-stroke-hover: #7986cb;
+        --apex-tree-font-family: 'Inter', sans-serif;
+        --apex-tree-font-size: 13px;
+        --apex-tree-font-color: #c9d1d9;
+        --apex-tree-expand-btn-bg: #2a3349;
+        --apex-tree-expand-btn-border: #3d4f6e;
+      }
+
+      body[data-theme='dark'] #tree-live {
+        --apex-tree-node-bg: #1e2433;
+        --apex-tree-node-bg-hover: #2a3349;
+        --apex-tree-node-border: #3d4f6e;
+        --apex-tree-node-border-hover: #7986cb;
+        --apex-tree-node-border-radius: 8px;
+        --apex-tree-edge-stroke: #3d4f6e;
+        --apex-tree-edge-stroke-hover: #7986cb;
+        --apex-tree-font-family: 'Inter', sans-serif;
+        --apex-tree-font-size: 13px;
+        --apex-tree-font-color: #c9d1d9;
+        --apex-tree-expand-btn-bg: #2a3349;
+        --apex-tree-expand-btn-border: #3d4f6e;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>ApexTree &mdash; <span>CSS Custom Property Theming</span></h1>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span id="themeLabel">Switch to Dark Mode</span>
+      </button>
+    </header>
+
+    <main class="content">
+      <!-- ── 1. Live Toggle Demo ────────────────────────────────────── -->
+      <section class="demo-section">
+        <h2>Live Theme Toggle</h2>
+        <p>
+          Use the toggle in the header to switch between light and dark mode. The chart responds to CSS custom
+          properties defined on its container &mdash; no JavaScript options are changed.
+        </p>
+        <div class="chart-wrapper">
+          <div id="tree-live"></div>
+        </div>
+      </section>
+
+      <!-- ── 2. Side-by-side comparison ───────────────────────────── -->
+      <section class="demo-section">
+        <h2>Light vs Dark &mdash; CSS-only theming</h2>
+        <p>
+          Both charts below use identical JavaScript options. The only difference is the CSS custom properties set on
+          each container.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+          <div>
+            <p style="margin-bottom: 8px; font-weight: 600; font-size: 0.875rem">Light (CSS vars)</p>
+            <div class="chart-wrapper">
+              <div id="tree-light"></div>
+            </div>
+          </div>
+          <div>
+            <p style="margin-bottom: 8px; font-weight: 600; font-size: 0.875rem">Dark (CSS vars)</p>
+            <div style="background: #13192a; border-radius: 8px; overflow: hidden; border: 1px solid #3d4f6e">
+              <div id="tree-dark"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 3. CSS snippet ───────────────────────────────────────── -->
+      <section class="demo-section">
+        <h2>How it works</h2>
+        <p>
+          Set CSS custom properties on the container element (or any ancestor) to override the default JS option values.
+          The chart reads these at render time via
+          <code style="display: inline; padding: 2px 6px; font-size: 0.78rem">getComputedStyle()</code>.
+        </p>
+        <code
+          >/* 1. Set CSS vars on the container — no JS changes needed */ #my-chart { --apex-tree-node-bg: #1e2433;
+          --apex-tree-node-border: #3d4f6e; --apex-tree-font-color: #c9d1d9; } /* 2. Or use a media query for automatic
+          OS-level dark mode */ @media (prefers-color-scheme: dark) { #my-chart { --apex-tree-node-bg: #1e2433;
+          --apex-tree-font-color: #c9d1d9; } } /* 3. Or use a data attribute for a manual toggle */ [data-theme="dark"]
+          #my-chart { --apex-tree-node-bg: #1e2433; --apex-tree-font-color: #c9d1d9; }</code
+        >
+      </section>
+
+      <!-- ── 4. Token Reference ───────────────────────────────────── -->
+      <section class="demo-section">
+        <h2>Token Reference</h2>
+        <p>All supported CSS custom properties for ApexTree.</p>
+        <div class="token-grid">
+          <div class="token-item">
+            <div class="token-swatch" style="background: #ffffff; border-color: #ccc"></div>
+            <div>
+              <div class="token-name">--apex-tree-node-bg</div>
+              <div>Node background</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #f0f4ff"></div>
+            <div>
+              <div class="token-name">--apex-tree-node-bg-hover</div>
+              <div>Node background on hover</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #bcbcbc"></div>
+            <div>
+              <div class="token-name">--apex-tree-node-border</div>
+              <div>Node border color</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #5c6bc0"></div>
+            <div>
+              <div class="token-name">--apex-tree-node-border-hover</div>
+              <div>Node border on hover</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: transparent; border-style: dashed"></div>
+            <div>
+              <div class="token-name">--apex-tree-node-border-radius</div>
+              <div>Node corner radius (e.g. 5px)</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #bcbcbc"></div>
+            <div>
+              <div class="token-name">--apex-tree-edge-stroke</div>
+              <div>Edge / connector color</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #5c6bc0"></div>
+            <div>
+              <div class="token-name">--apex-tree-edge-stroke-hover</div>
+              <div>Edge color on hover</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: transparent; border-style: dashed"></div>
+            <div>
+              <div class="token-name">--apex-tree-font-family</div>
+              <div>Font family for labels</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: transparent; border-style: dashed"></div>
+            <div>
+              <div class="token-name">--apex-tree-font-size</div>
+              <div>Font size for labels (e.g. 14px)</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #000000"></div>
+            <div>
+              <div class="token-name">--apex-tree-font-color</div>
+              <div>Label text color</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #ffffff; border-color: #ccc"></div>
+            <div>
+              <div class="token-name">--apex-tree-expand-btn-bg</div>
+              <div>Expand/collapse button fill</div>
+            </div>
+          </div>
+          <div class="token-item">
+            <div class="token-swatch" style="background: #bcbcbc"></div>
+            <div>
+              <div class="token-name">--apex-tree-expand-btn-border</div>
+              <div>Expand/collapse button border</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // ── Shared tree data with images and accent stripes ────────────
+      const treeData = {
+        id: '1',
+        data: {
+          name: 'Sarah Chen',
+          title: 'CEO',
+          img: 'https://api.dicebear.com/9.x/initials/svg?seed=Sarah%20Chen',
+          accent: '#5c6bc0',
+        },
+        children: [
+          {
+            id: '2',
+            data: {
+              name: 'James Miller',
+              title: 'CTO',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=James%20Miller',
+              accent: '#10b981',
+            },
+            children: [
+              {
+                id: '4',
+                data: {
+                  name: 'Priya Shah',
+                  title: 'Frontend Lead',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Priya%20Shah',
+                  accent: '#10b981',
+                },
+              },
+              {
+                id: '5',
+                data: {
+                  name: 'Marco Rossi',
+                  title: 'Backend Lead',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Marco%20Rossi',
+                  accent: '#10b981',
+                },
+              },
+              {
+                id: '6',
+                data: {
+                  name: 'Anika Patel',
+                  title: 'DevOps Lead',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Anika%20Patel',
+                  accent: '#10b981',
+                },
+              },
+            ],
+          },
+          {
+            id: '3',
+            data: {
+              name: 'Jordan Liu',
+              title: 'CFO',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Jordan%20Liu',
+              accent: '#f59e0b',
+            },
+            children: [
+              {
+                id: '7',
+                data: {
+                  name: 'Ada Fischer',
+                  title: 'Accounting',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Ada%20Fischer',
+                  accent: '#f59e0b',
+                },
+              },
+              {
+                id: '8',
+                data: {
+                  name: 'Tom Burke',
+                  title: 'Treasury',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Tom%20Burke',
+                  accent: '#f59e0b',
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      const nodeTemplate = (content) =>
+        `<div style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            padding: 10px 8px 8px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow: hidden;
+          ">
+          <img src="${content.img}" alt=""
+            style="
+              width: 36px; height: 36px;
+              border-radius: 50%;
+              object-fit: cover;
+              flex-shrink: 0;
+              border: 2px solid ${content.accent};
+              margin-bottom: 5px;
+            " />
+          <div style="font-weight: 600; font-size: 11px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${content.name}</div>
+          <div style="font-size: 9px; color: color-mix(in srgb, currentColor 65%, transparent); margin-top: 1px;">${content.title}</div>
+        </div>`;
+
+      const commonOptions = {
+        contentKey: 'data',
+        width: '100%',
+        height: 380,
+        nodeWidth: 140,
+        nodeHeight: 110,
+        childrenSpacing: 60,
+        siblingSpacing: 16,
+        direction: 'top',
+        highlightOnHover: true,
+        nodeTemplate,
+      };
+
+      // ── Live toggle chart ─────────────────────────────────────────
+      const liveTree = new ApexTree(document.getElementById('tree-live'), commonOptions);
+      liveTree.render(treeData);
+
+      // ── Side-by-side charts ───────────────────────────────────────
+      const lightTree = new ApexTree(document.getElementById('tree-light'), {
+        ...commonOptions,
+        height: 300,
+        canvasStyle: 'background: #f8fafc;',
+      });
+      lightTree.render(treeData);
+
+      const darkTree = new ApexTree(document.getElementById('tree-dark'), {
+        ...commonOptions,
+        height: 300,
+        canvasStyle: 'background: #13192a;',
+      });
+      darkTree.render(treeData);
+
+      // ── Theme toggle logic ────────────────────────────────────────
+      function toggleTheme() {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          document.body.removeAttribute('data-theme');
+          document.getElementById('themeLabel').textContent = 'Switch to Dark Mode';
+        } else {
+          document.body.setAttribute('data-theme', 'dark');
+          document.getElementById('themeLabel').textContent = 'Switch to Light Mode';
+        }
+        liveTree.render(treeData);
+      }
+    </script>
+  </body>
+</html>

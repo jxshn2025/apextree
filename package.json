@@ -1,0 +1,26 @@
+{
+  "name": "apextree",
+  "version": "1.13.0",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apexcharts/apextree"
+  },
+  "type": "module",
+  "types": "./apextree.d.ts",
+  "main": "./apextree.min.js",
+  "module": "./apextree.es.min.js",
+  "license": "See LICENSE in LICENSE",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./apextree.d.ts",
+        "default": "./apextree.es.min.js"
+      },
+      "require": {
+        "types": "./apextree.d.ts",
+        "default": "./apextree.min.js"
+      }
+    }
+  }
+}

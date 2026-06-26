@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>External Labels (LR) - Tech Stack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6e6e6e;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>External Labels — Left to Right</h2>
+    <p class="subtitle">
+      Left-to-right layout with <code>externalLabel</code> per depth: root anchored to the left, categories above
+      markers, leaves to the right of markers (<code>direction: 'left'</code>).
+    </p>
+    <div id="svg-tree"></div>
+    <script>
+      const palette = {
+        frontend: '#06B6D4',
+        backend: '#10B981',
+        database: '#F59E0B',
+        devops: '#8B5CF6',
+        cloud: '#EF4444',
+      };
+      const darken = (hex, amt = 0.3) => {
+        const n = parseInt(hex.slice(1), 16);
+        const r = Math.max(0, Math.round(((n >> 16) & 0xff) * (1 - amt)));
+        const g = Math.max(0, Math.round(((n >> 8) & 0xff) * (1 - amt)));
+        const b = Math.max(0, Math.round((n & 0xff) * (1 - amt)));
+        return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+      };
+
+      const marker = (color) => ({
+        nodeBGColor: color,
+        nodeBGColorHover: color,
+        borderColor: color,
+        borderColorHover: color,
+        borderRadius: '50%',
+        borderWidth: 0,
+        nodeShadow: '',
+      });
+
+      // Root sits at the left edge — label hugs the left side of the marker.
+      const rootLabel = {
+        enabled: true,
+        align: 'left',
+        offsetX: -12,
+        fontSize: '14px',
+        fontWeight: '600',
+      };
+      // Category markers in the middle column — label floats above each marker.
+      const categoryLabel = {
+        enabled: true,
+        verticalAlign: 'top',
+        offsetY: -16,
+        fontSize: '13px',
+        fontWeight: '600',
+      };
+      // Leaf markers in the right column — label floats to the right of each
+      // marker (no rotation needed in LR layouts; labels just extend horizontally).
+      const leafLabel = {
+        enabled: true,
+        align: 'right',
+        offsetX: 12,
+        fontSize: '12px',
+        fontWeight: '500',
+      };
+
+      const leaf = (id, name, parentColor) => ({
+        id,
+        name,
+        children: [],
+        options: {
+          ...marker(darken(parentColor)),
+          externalLabel: leafLabel,
+        },
+      });
+
+      const category = (id, name, color, leaves) => ({
+        id,
+        name,
+        options: {
+          ...marker(color),
+          externalLabel: categoryLabel,
+        },
+        children: leaves.map(([leafId, leafName]) => leaf(leafId, leafName, color)),
+      });
+
+      const data = {
+        id: 'stack',
+        name: 'Modern Stack',
+        options: {
+          ...marker('#3B82F6'),
+          externalLabel: rootLabel,
+        },
+        children: [
+          category('frontend', 'Frontend', palette.frontend, [
+            ['react', 'React'],
+            ['vue', 'Vue'],
+            ['svelte', 'Svelte'],
+            ['solid', 'Solid'],
+            ['angular', 'Angular'],
+          ]),
+          category('backend', 'Backend', palette.backend, [
+            ['node', 'Node.js'],
+            ['python', 'Python'],
+            ['go', 'Go'],
+            ['rust', 'Rust'],
+            ['elixir', 'Elixir'],
+          ]),
+          category('database', 'Database', palette.database, [
+            ['postgres', 'PostgreSQL'],
+            ['mongo', 'MongoDB'],
+            ['redis', 'Redis'],
+            ['mysql', 'MySQL'],
+            ['sqlite', 'SQLite'],
+          ]),
+          category('devops', 'DevOps', palette.devops, [
+            ['docker', 'Docker'],
+            ['k8s', 'Kubernetes'],
+            ['terraform', 'Terraform'],
+            ['ansible', 'Ansible'],
+          ]),
+          category('cloud', 'Cloud', palette.cloud, [
+            ['aws', 'AWS'],
+            ['gcp', 'GCP'],
+            ['azure', 'Azure'],
+            ['cloudflare', 'Cloudflare'],
+          ]),
+        ],
+      };
+
+      const options = {
+        width: '100%',
+        viewPortWidth: 1100,
+        viewPortHeight: 560,
+        nodeWidth: 12,
+        nodeHeight: 12,
+        siblingSpacing: 22,
+        childrenSpacing: 220,
+        // Extra room on both sides — root label hugs the left edge, leaf
+        // labels extend horizontally to the right past their markers.
+        paddingX: 160,
+        paddingY: 40,
+        direction: 'left',
+        edgeStyle: 'curved',
+        edgeColor: '#9CA3AF',
+        edgeWidth: 1.2,
+        enableExpandCollapse: false,
+        expandCollapseOnNodeClick: true,
+        highlightOnHover: false,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #fafbfc;',
+      };
+
+      const tree = new ApexTree(document.getElementById('svg-tree'), options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

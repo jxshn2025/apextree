@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edge Color Mode - Org Chart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6e6e6e;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Org Chart — Edge Color Mode</h2>
+    <p class="subtitle">
+      Each connector inherits the border color of its child node (<code>edgeColorMode: 'node'</code>)
+    </p>
+    <div id="svg-tree"></div>
+    <script>
+      const nodeTemplate = (content) => `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          padding: 4px 8px;
+          box-sizing: border-box;
+          text-align: center;
+        ">
+          <div style="font-weight: 700; font-size: 13px; line-height: 1.3;">${content.name}</div>
+          <div style="font-size: 11px; color: color-mix(in srgb, currentColor 75%, transparent); margin-top: 2px;">${content.role}</div>
+        </div>`;
+
+      // Director palette — greens (light → dark)
+      const directorColors = {
+        light: {bg: '#d3f9d8', border: '#74c69d'},
+        mid: {bg: '#96f2d7', border: '#38d9a9'},
+        dark1: {bg: '#52b788', border: '#2d6a4f'},
+        dark2: {bg: '#2d6a4f', border: '#1b4332'},
+      };
+
+      // Manager palette — blues (light → dark)
+      const managerColors = [
+        {bg: '#e7f5ff', border: '#74c0fc'},
+        {bg: '#d0ebff', border: '#4dabf7'},
+        {bg: '#4dabf7', border: '#1971c2'},
+        {bg: '#1098ad', border: '#0c8599'},
+        {bg: '#0b7285', border: '#087578'},
+      ];
+
+      const makeNodeOptions = ({bg, border}) => ({
+        nodeBGColor: bg,
+        nodeBGColorHover: bg,
+        borderColor: border,
+        borderColorHover: border,
+      });
+
+      const data = {
+        id: 'ceo',
+        data: {name: 'Linzi Cassidy', role: 'CEO'},
+        options: {
+          nodeBGColor: '#f8f9fa',
+          nodeBGColorHover: '#f1f3f5',
+          borderColor: '#adb5bd',
+          borderColorHover: '#868e96',
+        },
+        children: [
+          {
+            id: 'directors-group',
+            data: {name: 'Board of Directors', role: 'Leadership'},
+            options: {
+              nodeBGColor: '#e9ecef',
+              nodeBGColorHover: '#dee2e6',
+              borderColor: '#ced4da',
+              borderColorHover: '#adb5bd',
+            },
+            children: [
+              {
+                id: 'tyrique',
+                data: {name: 'Tyrique Kent', role: 'Director'},
+                options: makeNodeOptions(directorColors.light),
+              },
+              {
+                id: 'robin',
+                data: {name: 'Robin Mill', role: 'Director'},
+                options: makeNodeOptions(directorColors.mid),
+              },
+              {
+                id: 'bushra',
+                data: {name: 'Bushra Barnett', role: 'Director'},
+                options: makeNodeOptions(directorColors.dark1),
+              },
+              {
+                id: 'kay',
+                data: {name: 'Kay Atkins', role: 'Director'},
+                options: makeNodeOptions(directorColors.dark2),
+              },
+            ],
+          },
+          {
+            id: 'managers-group',
+            data: {name: 'Management Team', role: 'Operations'},
+            options: {
+              nodeBGColor: '#e9ecef',
+              nodeBGColorHover: '#dee2e6',
+              borderColor: '#ced4da',
+              borderColorHover: '#adb5bd',
+            },
+            children: [
+              {
+                id: 'samara',
+                data: {name: 'Samara Munoz', role: 'Manager'},
+                options: makeNodeOptions(managerColors[0]),
+              },
+              {
+                id: 'alya',
+                data: {name: 'Alya Roberts', role: 'Manager'},
+                options: makeNodeOptions(managerColors[1]),
+              },
+              {
+                id: 'glyn',
+                data: {name: 'Glyn Dawe', role: 'Manager'},
+                options: makeNodeOptions(managerColors[2]),
+              },
+              {
+                id: 'chad',
+                data: {name: 'Chad Read', role: 'Manager'},
+                options: makeNodeOptions(managerColors[3]),
+              },
+              {
+                id: 'kyan',
+                data: {name: 'Kyan Fuentes', role: 'Manager'},
+                options: makeNodeOptions(managerColors[4]),
+              },
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        contentKey: 'data',
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 560,
+        nodeWidth: 130,
+        nodeHeight: 60,
+        childrenSpacing: 80,
+        siblingSpacing: 16,
+        direction: 'top',
+        enableExpandCollapse: false,
+        enableToolbar: true,
+        edgeColorMode: 'node',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #ffffff;',
+      };
+
+      const tree = new ApexTree(document.getElementById('svg-tree'), options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

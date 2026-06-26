@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Top to Bottom View - Company Departments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6e6e6e;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Company Departments</h2>
+    <p class="subtitle">
+      Top-to-bottom layout with department color coding and toolbar (<code>direction: 'top'</code>,
+      <code>enableToolbar: true</code>)
+    </p>
+    <div id="svg-tree"></div>
+    <script>
+      const depts = {
+        hq: {bg: '#F8FAFC', border: '#94A3B8', borderHover: '#64748B', accent: '#475569'},
+        finance: {bg: '#EFF6FF', border: '#93C5FD', borderHover: '#3B82F6', accent: '#2563EB'},
+        hr: {bg: '#FDF2F8', border: '#F9A8D4', borderHover: '#EC4899', accent: '#DB2777'},
+        marketing: {bg: '#FFF7ED', border: '#FDBA74', borderHover: '#F97316', accent: '#EA580C'},
+        product: {bg: '#F0FDF4', border: '#86EFAC', borderHover: '#22C55E', accent: '#16A34A'},
+        sales: {bg: '#EEF2FF', border: '#A5B4FC', borderHover: '#6366F1', accent: '#4F46E5'},
+      };
+
+      const makeOpts = (dept) => ({
+        nodeBGColor: depts[dept].bg,
+        nodeBGColorHover: depts[dept].bg,
+        borderColor: depts[dept].border,
+        borderColorHover: depts[dept].borderHover,
+      });
+
+      const nodeTemplate = (c) => `
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 100%;
+          padding: 10px 8px 8px;
+          box-sizing: border-box;
+          text-align: center;
+          overflow: hidden;
+        ">
+          <img src="${c.img}" alt=""
+            style="
+              width: 40px; height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+              flex-shrink: 0;
+              border: 2px solid ${c.accent};
+              margin-bottom: 6px;
+            " />
+          <div style="font-weight: 600; font-size: 11px; color: #1e293b; line-height: 1.3;">${c.name}</div>
+          <div style="font-size: 9px; color: #64748b; margin-top: 2px;">${c.title}</div>
+          <div style="font-size: 8px; color: ${c.accent}; margin-top: 2px; font-weight: 500;">${c.dept}</div>
+        </div>`;
+
+      const data = {
+        id: 'ceo',
+        data: {
+          name: 'Alexandra Whitfield',
+          title: 'Chief Executive Officer',
+          dept: 'Headquarters',
+          img: 'https://api.dicebear.com/9.x/initials/svg?seed=Alexandra%20Whitfield',
+          accent: depts.hq.accent,
+        },
+        options: makeOpts('hq'),
+        children: [
+          {
+            id: 'cfo',
+            data: {
+              name: 'Robert Cheng',
+              title: 'VP Finance',
+              dept: 'Finance',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Robert%20Cheng',
+              accent: depts.finance.accent,
+            },
+            options: makeOpts('finance'),
+            children: [
+              {
+                id: 'accounting',
+                data: {
+                  name: 'Julia Becker',
+                  title: 'Accounting Lead',
+                  dept: 'Accounting',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Julia%20Becker',
+                  accent: depts.finance.accent,
+                },
+                options: makeOpts('finance'),
+              },
+              {
+                id: 'treasury',
+                data: {
+                  name: 'Patrick Doyle',
+                  title: 'Treasury Manager',
+                  dept: 'Treasury',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Patrick%20Doyle',
+                  accent: depts.finance.accent,
+                },
+                options: makeOpts('finance'),
+              },
+            ],
+          },
+          {
+            id: 'chro',
+            data: {
+              name: 'Maria Santos',
+              title: 'VP Human Resources',
+              dept: 'Human Resources',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Maria%20Santos',
+              accent: depts.hr.accent,
+            },
+            options: makeOpts('hr'),
+            children: [
+              {
+                id: 'talent',
+                data: {
+                  name: 'Lily Nguyen',
+                  title: 'Talent Acquisition',
+                  dept: 'Recruiting',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Lily%20Nguyen',
+                  accent: depts.hr.accent,
+                },
+                options: makeOpts('hr'),
+              },
+              {
+                id: 'people_ops',
+                data: {
+                  name: 'Andre Wilson',
+                  title: 'People Ops Lead',
+                  dept: 'People Ops',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Andre%20Wilson',
+                  accent: depts.hr.accent,
+                },
+                options: makeOpts('hr'),
+              },
+            ],
+          },
+          {
+            id: 'cmo',
+            data: {
+              name: 'Jake Morrison',
+              title: 'VP Marketing',
+              dept: 'Marketing',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Jake%20Morrison',
+              accent: depts.marketing.accent,
+            },
+            options: makeOpts('marketing'),
+            children: [
+              {
+                id: 'brand',
+                data: {
+                  name: 'Chloe Dumont',
+                  title: 'Brand Strategist',
+                  dept: 'Brand',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Chloe%20Dumont',
+                  accent: depts.marketing.accent,
+                },
+                options: makeOpts('marketing'),
+              },
+              {
+                id: 'growth',
+                data: {
+                  name: 'Ryan Torres',
+                  title: 'Growth Manager',
+                  dept: 'Growth',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Ryan%20Torres',
+                  accent: depts.marketing.accent,
+                },
+                options: makeOpts('marketing'),
+              },
+              {
+                id: 'comms',
+                data: {
+                  name: 'Ines Ferreira',
+                  title: 'Comms Manager',
+                  dept: 'Communications',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Ines%20Ferreira',
+                  accent: depts.marketing.accent,
+                },
+                options: makeOpts('marketing'),
+              },
+            ],
+          },
+          {
+            id: 'cpo',
+            data: {
+              name: 'Kenji Tanaka',
+              title: 'VP Product',
+              dept: 'Product',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Kenji%20Tanaka',
+              accent: depts.product.accent,
+            },
+            options: makeOpts('product'),
+            children: [
+              {
+                id: 'design',
+                data: {
+                  name: 'Eva Lindgren',
+                  title: 'Design Lead',
+                  dept: 'Product Design',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Eva%20Lindgren',
+                  accent: depts.product.accent,
+                },
+                options: makeOpts('product'),
+              },
+              {
+                id: 'research',
+                data: {
+                  name: 'Omar Farouk',
+                  title: 'Research Lead',
+                  dept: 'User Research',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Omar%20Farouk',
+                  accent: depts.product.accent,
+                },
+                options: makeOpts('product'),
+              },
+            ],
+          },
+          {
+            id: 'cro',
+            data: {
+              name: 'Sarah Mitchell',
+              title: 'VP Sales',
+              dept: 'Sales',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Sarah%20Mitchell',
+              accent: depts.sales.accent,
+            },
+            options: makeOpts('sales'),
+            children: [
+              {
+                id: 'enterprise',
+                data: {
+                  name: 'Derek Chang',
+                  title: 'Enterprise Lead',
+                  dept: 'Enterprise Sales',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Derek%20Chang',
+                  accent: depts.sales.accent,
+                },
+                options: makeOpts('sales'),
+              },
+              {
+                id: 'partnerships',
+                data: {
+                  name: 'Amina Diallo',
+                  title: 'Partnerships Lead',
+                  dept: 'Partnerships',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Amina%20Diallo',
+                  accent: depts.sales.accent,
+                },
+                options: makeOpts('sales'),
+              },
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        contentKey: 'data',
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 700,
+        nodeWidth: 140,
+        nodeHeight: 120,
+        childrenSpacing: 70,
+        siblingSpacing: 12,
+        direction: 'top',
+        edgeStyle: 'orthogonal',
+        edgeWidth: 1,
+        enableExpandCollapse: false,
+        enableToolbar: true,
+        edgeColorMode: 'node',
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px; background: #ffffff;',
+      };
+
+      const tree = new ApexTree(document.getElementById('svg-tree'), options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

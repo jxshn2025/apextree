@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expand &amp; Collapse Nodes - Hospital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="../apextree.min.js"></script>
+    <style>
+      body {
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+        background: #fff;
+        padding: 20px 0;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: #6e6e6e;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Hospital Organizational Chart</h2>
+    <p class="subtitle">
+      Click the +/&minus; buttons to expand or collapse departments (<code>enableExpandCollapse: true</code>)
+    </p>
+    <div id="svg-tree"></div>
+    <script>
+      const roles = {
+        executive: {bg: '#F0FDFA', border: '#2DD4BF', borderHover: '#0D9488', accent: '#0D9488'},
+        department: {bg: '#F0F9FF', border: '#7DD3FC', borderHover: '#0EA5E9', accent: '#0EA5E9'},
+        doctor: {bg: '#FFF1F2', border: '#FDA4AF', borderHover: '#F43F5E', accent: '#F43F5E'},
+        nurse: {bg: '#FDF4FF', border: '#E9D5FF', borderHover: '#A855F7', accent: '#A855F7'},
+        support: {bg: '#FFFBEB', border: '#FDE68A', borderHover: '#F59E0B', accent: '#F59E0B'},
+      };
+
+      const makeOpts = () => ({
+        nodeBGColor: 'transparent',
+        nodeBGColorHover: 'transparent',
+        borderWidth: 0,
+        nodeShadow: 'none',
+      });
+
+      // CSS grid lets the avatar overlap the card without `position:relative`,
+      // which Safari mis-paints when a foreignObject ancestor's SVG viewBox is
+      // scaled. Avatar comes AFTER the card in DOM so it paints on top.
+      const nodeTemplate = (c) => `
+        <div style="
+          display: grid;
+          grid-template-columns: 1fr;
+          grid-template-rows: 26px 1fr;
+          height: 100%;
+          box-sizing: border-box;
+          text-align: center;
+          justify-items: center;
+          padding: 0 4px 4px;
+        ">
+          <div style="
+            grid-row: 2 / 3;
+            grid-column: 1;
+            align-self: stretch;
+            background: ${c.bg};
+            border: 1px solid ${c.border};
+            border-radius: 8px;
+            padding: 32px 8px 10px;
+            box-sizing: border-box;
+          ">
+            <div style="font-weight: 600; font-size: 11px; color: #0f172a; line-height: 1.3;">${c.name}</div>
+            <div style="font-size: 9px; color: #64748b; margin-top: 2px;">${c.title}</div>
+            <div style="font-size: 8px; color: ${c.accent}; margin-top: 2px; font-weight: 500;">${c.dept}</div>
+          </div>
+          <img src="${c.img}" alt=""
+            style="
+              grid-row: 1;
+              grid-column: 1;
+              width: 48px; height: 48px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 3px solid ${c.accent};
+              background: #fff;
+            " />
+        </div>`;
+
+      const data = {
+        id: 'director',
+        data: {
+          name: 'Dr. Helen Marsh',
+          title: 'Medical Director',
+          dept: 'Executive Board',
+          img: 'https://api.dicebear.com/9.x/initials/svg?seed=Dr.%20Helen%20Marsh',
+          accent: roles.executive.accent,
+          bg: roles.executive.bg,
+          border: roles.executive.border,
+        },
+        options: makeOpts(),
+        children: [
+          {
+            id: 'surgery',
+            data: {
+              name: 'Dr. James Porter',
+              title: 'Head of Surgery',
+              dept: 'Surgery Dept.',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Dr.%20James%20Porter',
+              accent: roles.department.accent,
+              bg: roles.department.bg,
+              border: roles.department.border,
+            },
+            options: makeOpts(),
+            children: [
+              {
+                id: 'surgeon_1',
+                data: {
+                  name: 'Dr. Anika Raj',
+                  title: 'Cardiac Surgeon',
+                  dept: 'Cardiology',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Dr.%20Anika%20Raj',
+                  accent: roles.doctor.accent,
+                  bg: roles.doctor.bg,
+                  border: roles.doctor.border,
+                },
+                options: makeOpts(),
+                children: [
+                  {
+                    id: 'nurse_cardiac1',
+                    data: {
+                      name: 'Emily Shaw',
+                      title: 'Cardiac Nurse',
+                      dept: 'Cardiology',
+                      img: 'https://api.dicebear.com/9.x/initials/svg?seed=Emily%20Shaw',
+                      accent: roles.nurse.accent,
+                      bg: roles.nurse.bg,
+                      border: roles.nurse.border,
+                    },
+                    options: makeOpts(),
+                  },
+                  {
+                    id: 'nurse_cardiac2',
+                    data: {
+                      name: 'Chen Wei',
+                      title: 'Cardiac Nurse',
+                      dept: 'Cardiology',
+                      img: 'https://api.dicebear.com/9.x/initials/svg?seed=Chen%20Wei',
+                      accent: roles.nurse.accent,
+                      bg: roles.nurse.bg,
+                      border: roles.nurse.border,
+                    },
+                    options: makeOpts(),
+                  },
+                ],
+              },
+              {
+                id: 'surgeon_2',
+                data: {
+                  name: 'Dr. Luca Moretti',
+                  title: 'Orthopedic Surgeon',
+                  dept: 'Orthopedics',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Dr.%20Luca%20Moretti',
+                  accent: roles.doctor.accent,
+                  bg: roles.doctor.bg,
+                  border: roles.doctor.border,
+                },
+                options: makeOpts(),
+                children: [
+                  {
+                    id: 'nurse_ortho1',
+                    data: {
+                      name: 'Grace Okonkwo',
+                      title: 'Ortho Nurse Lead',
+                      dept: 'Orthopedics',
+                      img: 'https://api.dicebear.com/9.x/initials/svg?seed=Grace%20Okonkwo',
+                      accent: roles.nurse.accent,
+                      bg: roles.nurse.bg,
+                      border: roles.nurse.border,
+                    },
+                    options: makeOpts(),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'emergency',
+            data: {
+              name: 'Dr. Priya Nair',
+              title: 'Head of Emergency',
+              dept: 'Emergency Dept.',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Dr.%20Priya%20Nair',
+              accent: roles.department.accent,
+              bg: roles.department.bg,
+              border: roles.department.border,
+            },
+            options: makeOpts(),
+            children: [
+              {
+                id: 'er_nurse',
+                data: {
+                  name: 'Rosa Martinez',
+                  title: 'Triage Nurse Lead',
+                  dept: 'Emergency',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Rosa%20Martinez',
+                  accent: roles.nurse.accent,
+                  bg: roles.nurse.bg,
+                  border: roles.nurse.border,
+                },
+                options: makeOpts(),
+                children: [
+                  {
+                    id: 'er_nurse_1',
+                    data: {
+                      name: 'David Park',
+                      title: 'Triage Nurse',
+                      dept: 'Emergency',
+                      img: 'https://api.dicebear.com/9.x/initials/svg?seed=David%20Park',
+                      accent: roles.nurse.accent,
+                      bg: roles.nurse.bg,
+                      border: roles.nurse.border,
+                    },
+                    options: makeOpts(),
+                  },
+                  {
+                    id: 'er_nurse_2',
+                    data: {
+                      name: 'Amina Hassan',
+                      title: 'Triage Nurse',
+                      dept: 'Emergency',
+                      img: 'https://api.dicebear.com/9.x/initials/svg?seed=Amina%20Hassan',
+                      accent: roles.nurse.accent,
+                      bg: roles.nurse.bg,
+                      border: roles.nurse.border,
+                    },
+                    options: makeOpts(),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'admin',
+            data: {
+              name: 'Karen Whitfield',
+              title: 'Head of Admin',
+              dept: 'Administration',
+              img: 'https://api.dicebear.com/9.x/initials/svg?seed=Karen%20Whitfield',
+              accent: roles.support.accent,
+              bg: roles.support.bg,
+              border: roles.support.border,
+            },
+            options: makeOpts(),
+            children: [
+              {
+                id: 'billing',
+                data: {
+                  name: 'Tom Richards',
+                  title: 'Billing Manager',
+                  dept: 'Finance',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Tom%20Richards',
+                  accent: roles.support.accent,
+                  bg: roles.support.bg,
+                  border: roles.support.border,
+                },
+                options: makeOpts(),
+              },
+
+              {
+                id: 'facilities',
+                data: {
+                  name: 'Jorge Mendez',
+                  title: 'Facilities Manager',
+                  dept: 'Operations',
+                  img: 'https://api.dicebear.com/9.x/initials/svg?seed=Jorge%20Mendez',
+                  accent: roles.support.accent,
+                  bg: roles.support.bg,
+                  border: roles.support.border,
+                },
+                options: makeOpts(),
+              },
+            ],
+          },
+        ],
+      };
+
+      const options = {
+        contentKey: 'data',
+        nodeTemplate,
+        width: '100%',
+        viewPortWidth: 1000,
+        viewPortHeight: 700,
+        nodeWidth: 140,
+        nodeHeight: 120,
+        childrenSpacing: 60,
+        siblingSpacing: 14,
+        direction: 'top',
+        edgeStyle: 'curved',
+        edgeWidth: 2,
+        highlightOnHover: false,
+        enableExpandCollapse: true,
+        enableToolbar: true,
+        canvasStyle: 'border: 1px solid #e0e0e0; border-radius: 8px;',
+      };
+
+      const tree = new ApexTree(document.getElementById('svg-tree'), options);
+      tree.render(data);
+    </script>
+  </body>
+</html>

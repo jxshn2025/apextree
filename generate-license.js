@@ -15,7 +15,7 @@ function printHelp() {
 ApexTree License Key Generator
 
 Options:
-  --expiry, -e    Expiry date (YYYY-MM-DD)        [default: 2027-12-31]
+  --expiry, -e    Expiry date (YYYY-MM-DD)        [default: 2099-12-31]
   --issue, -i     Issue date  (YYYY-MM-DD)        [default: today]
   --plan, -p      Plan name                       [default: standard]
   --domains, -d   Comma-separated domain list     [default: example.com]
@@ -31,7 +31,7 @@ Examples:
 
 function parseArgs(args) {
   const opts = {
-    expiry: '2027-12-31',
+    expiry: '2099-12-31',
     issue: new Date().toISOString().slice(0, 10),
     plan: 'standard',
     domains: ['example.com'],

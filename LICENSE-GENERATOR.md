@@ -13,14 +13,16 @@ node generate-license.js
 ```
 === ApexTree License Key ===
 
-APEX-eyJleHBpcnlEYXRlIjoiMjAyNy0xMi0zMSIsImlzc3VlRGF0ZSI6IjIwMjYtMDYtMjciLCJwbGFuIjoic3RhbmRhcmQiLCJkb21haW5zIjpbImV4YW1wbGUuY29tIl19
+APEX-eyJleHBpcnlEYXRlIjoiMjA5OS0xMi0zMSIsImlzc3VlRGF0ZSI6IjIwMjYtMDYtMjciLCJwbGFuIjoic3RhbmRhcmQiLCJkb21haW5zIjpbImV4YW1wbGUuY29tIl19
 ```
+
+默认生成 2099 年过期的 key，等同永久有效。
 
 ## 参数
 
 | 参数 | 缩写 | 说明 | 默认值 |
 |---|---|---|---|
-| `--expiry` | `-e` | 过期日期 (YYYY-MM-DD) | `2027-12-31` |
+| `--expiry` | `-e` | 过期日期 (YYYY-MM-DD) | `2099-12-31` |
 | `--issue` | `-i` | 签发日期 (YYYY-MM-DD) | 今天 |
 | `--plan` | `-p` | 计划名称 | `standard` |
 | `--domains` | `-d` | 绑定域名，逗号分隔 | `example.com` |
